@@ -4,5 +4,6 @@ export { default as createDataChannelServer } from "./src/js/connection/webrtc_c
 export { default as createDataChannelClient } from "./src/js/connection/webrtc_channel_client.js";
 export { default as rtcConnectionFunc }  from "./src/js/connection/server_webrtc.js";
 export { default as wrapClientConnection }  from "./src/js/connection/client_wrap_connection.js";
-export {delay} from "./src/js/utils/timer.js";
+export {delay, delayReject} from "./src/js/utils/timer.js";
+export {default as handlersFunc} from "./src/js/utils/handlers.js";
 export {default as loggerFunc} from "./src/js/views/logger.js";
