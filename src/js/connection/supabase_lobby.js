@@ -1,5 +1,5 @@
 import {delay} from "../utils/timer.js";
-import supaChannel from "../connection/supabase_channel.js";
+import supaChannel from "./supabase_channel.js";
 
 async function makeSupaChanServer(id, settings, logger) {
     const name = supaChannel.getConnectionUrl(id, settings);

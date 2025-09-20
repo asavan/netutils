@@ -1,6 +1,6 @@
 import {showGameView} from "../views/section_view.js";
 import actionToHandler from "../utils/action_to_handler.js";
-import {wrapClientConnection} from "../connection/client_wrap_connection.js";
+import wrapClientConnection from "../connection/client_wrap_connection.js";
 
 function setupGameToConnectionSendClient(game, con, logger, actionKeys) {
     for (const handlerName of actionKeys) {

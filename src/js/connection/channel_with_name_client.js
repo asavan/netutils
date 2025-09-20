@@ -1,6 +1,6 @@
 import wsChannel from "./websocket_channel.js";
 import netObj from "../mode/net.js";
-import supaLobby from "../connection/supabase_lobby.js";
+import supaLobby from "./supabase_lobby.js";
 import {delayReject} from "../utils/timer.js";
 
 
