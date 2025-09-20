@@ -4,7 +4,7 @@ import connectionFuncSig from "./broadcast.js";
 import actionToHandler from "../utils/action_to_handler.js";
 import {delayReject} from "../utils/timer.js";
 
-export function createDataChannel(id, logger) {
+export default function createDataChannel(id, logger) {
     const handlers = handlersFunc(["error", "open", "message", "beforeclose", "close"]);
     let isConnected = false;
     let dataChannel = null;
