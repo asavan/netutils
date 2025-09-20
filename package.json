@@ -1,0 +1,53 @@
+{
+  "name": "netutils",
+  "version": "0.0.1",
+  "author": "Alex Sav",
+  "description": "Net utils",
+  "private": true,
+  "main": "index.js",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "ws": "node devtools/ws-server.js",
+    "start": "webpack serve --config webpack_configs/webpack.config.js --mode development",
+    "all": "npm-run-all -p -r ws start",
+    "android": "webpack --config webpack_configs/android.webpack.config.js --mode production",
+    "build": "webpack --config webpack_configs/production.webpack.config.js --mode production",
+    "style": "npx eslint . -c linters/eslint.config.js",
+    "style:fix": "npx eslint . -c linters/eslint.config.js --fix",
+    "style3": "npx oxlint -D all -A no-console -A max-params -A prefer-add-event-listener -A no-useless-undefined -A no-undefined -A no-async-await -A func-names -A default-case -A filename-case -A no-lonely-if -A sort-keys -A no-magic-numbers -A no-plusplus -A prefer-global-this -A id-length -A yoda -A func-style -A switch-case-braces -A max-lines-per-function -A init-declarations -A prefer-set-has -A no-continue -A prefer-destructuring -A prefer-template -A no-null -A catch-error-name -A sort-imports -A no-rest-spread-properties -A no-eq-null -A no-optional-chaining -A no-await-in-loop -A no-negated-condition -A new-cap -A no-alert -A eqeqeq --threads=1 --deny-warnings  --ignore-pattern=src/js/lib/* ./src",
+    "test": "node --test --test-reporter dot",
+    "test:verbose": "node --test",
+    "test:coverage": "npx c8 node --test --test-reporter dot",
+    "updates": "npx ncu",
+    "updates:fix": "npx ncu -u && npm install && npm audit fix"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.3.1",
+    "c8": "^10.1.3",
+    "copy-webpack-plugin": "^13.0.1",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "eslint": "^9.35.0",
+    "globals": "^16.4.0",
+    "html-inline-css-webpack-plugin": "^1.11.2",
+    "html-webpack-plugin": "^5.6.4",
+    "jsdom": "^27.0.0",
+    "mini-css-extract-plugin": "^2.9.4",
+    "npm-check-updates": "^18.2.1",
+    "npm-run-all": "^4.1.5",
+    "oxlint": "^1.16.0",
+    "stylelint": "^16.24.0",
+    "stylelint-config-standard": "^39.0.0",
+    "terser-webpack-plugin": "^5.3.14",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "workbox-webpack-plugin": "^7.3.0",
+    "ws": "8.18.3"
+  },
+  "dependencies": {
+    "@akamfoad/qrcode": "^0.3.2",
+    "@supabase/supabase-js": "^2.57.4"
+  }
+}
