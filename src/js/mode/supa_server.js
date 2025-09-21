@@ -1,7 +1,7 @@
 import loggerFunc from "../views/logger.js";
 import addSettingsButton from "../views/settings-form-btn.js";
 import supaLobby from "../connection/supabase_lobby.js";
-import netObj from "./net.js";
+import netObj from "../utils/net.js";
 import {beginGame} from "./server_helper.js";
 import connectionFunc from "../connection/broadcast.js";
 

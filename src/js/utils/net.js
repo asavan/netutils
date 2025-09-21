@@ -1,4 +1,4 @@
-import rngFunc from "../utils/random.js";
+import rngFunc from "./random.js";
 
 function setupMedia() {
     if (navigator.mediaDevices) {
