@@ -1,4 +1,4 @@
-import {assert} from "./utils/helper.js";
+import {assert} from "./utils/assert.js";
 
 export default function lobby(clients, shift = 0, myId) {
     const clientsArr = [];

@@ -1,4 +1,4 @@
-import {assert} from "./helper.js";
+import {assert} from "./assert.js";
 
 export default function handlersFunc(arr, queue) {
     const handlers = {};
@@ -25,6 +25,7 @@ export default function handlersFunc(arr, queue) {
     const set = (f, arr1) => {
         handlers[f] = arr1;
     };
+    const handler = (name) => (arg) => call(name, arg);
     const call = (name, arg) => {
         const callbacks = getSafe(name);
         if (callbacks.length === 0) {
@@ -49,6 +50,7 @@ export default function handlersFunc(arr, queue) {
         set,
         call,
         reset,
+        handler,
         hasAction,
         actionKeys
     };

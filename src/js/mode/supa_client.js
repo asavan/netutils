@@ -4,7 +4,7 @@ import netObj from "../utils/net.js";
 import connectionFunc from "../connection/broadcast.js";
 import {beginGame} from "./client_helper.js";
 import supaLobby from "../connection/supabase_lobby.js";
-import {assert} from "../utils/helper.js";
+import {assert} from "../utils/assert.js";
 
 export default async function gameMode(window, document, settings, gameFunction) {
     const networkLogger = loggerFunc(document, settings);

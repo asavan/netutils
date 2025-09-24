@@ -8,17 +8,17 @@ function makeId(length, rngFunc) {
     return result;
 }
 
-function randomInteger(min, max) {
-    const rand = min + Math.random() * (max - min);
+function randomInteger(min, max, rngFunc) {
+    const rand = min + rngFunc() * (max - min);
     return Math.floor(rand);
 }
 
-function randomIndex(len) {
-    return randomInteger(0, len);
+function randomIndex(len, rngFunc) {
+    return randomInteger(0, len, rngFunc);
 }
 
-function randomEl(arr) {
-    return arr[randomIndex(arr.length)];
+function randomEl(arr, rngFunc = Math.random) {
+    return arr[randomIndex(arr.length, rngFunc)];
 }
 
 export default {

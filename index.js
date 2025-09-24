@@ -6,4 +6,8 @@ export { default as rtcConnectionFunc }  from "./src/js/connection/server_webrtc
 export { default as wrapClientConnection }  from "./src/js/connection/client_wrap_connection.js";
 export {delay, delayReject} from "./src/js/utils/timer.js";
 export {default as handlersFunc} from "./src/js/utils/handlers.js";
+export {default as install} from "./src/js/utils/install_as_app.js";
 export {default as loggerFunc} from "./src/js/views/logger.js";
+export {default as scanBarcode} from "./src/js/views/barcode.js";
+export {parseSettings} from "./src/js/utils/parse-settings.js";
+export {assert} from "./src/js/utils/assert.js";
