@@ -5,7 +5,7 @@ import stylistic from '@stylistic/eslint-plugin';
 export default [
     {
         ...js.configs.recommended,
-        files: ["src/**/*.js", "test/**/*.js"],
+        files: ["src/**/*.js", "tests/**/*.js"],
         ignores: ["src/js/lib/*", "src/js/connection/supabase_settings.js"],
         languageOptions: {
             ecmaVersion: 2022,
@@ -22,7 +22,7 @@ export default [
         plugins: {
             ' @stylistic': stylistic
         },
-        files: ["src/**/*.js", "test/**/*.js"],
+        files: ["src/**/*.js", "tests/**/*.js"],
         ignores: ["src/js/lib/*", "src/js/connection/supabase_settings.js"],
         rules: {
             "prefer-const": ["error"],
