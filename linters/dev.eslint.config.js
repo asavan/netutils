@@ -1,2 +1,2 @@
-import {esLintConf} from "netdeps";
+import {esLintConf} from "devdeps";
 export default esLintConf;

@@ -1,6 +1,6 @@
 {
   "name": "netutils",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Alex Sav",
   "description": "Net utils",
   "main": "index.js",
@@ -19,7 +19,7 @@
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
   "devDependencies": {
-    "netdeps": "github:asavan/net-deps#42df39a4471c207f67f1c85d359a34f22b15a0a8"
+    "devdeps": "github:asavan/dev-deps#be888503292db23595287bf00d1a18ed9aa69923"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
