@@ -1,6 +1,6 @@
 {
   "name": "netutils",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Alex Sav",
   "description": "Net utils",
   "main": "index.js",
@@ -8,8 +8,8 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "style": "npx eslint . -c linters/dev.eslint.config.js",
-    "style:fix": "npx eslint . -c linters/dev.eslint.config.js --fix",
+    "style": "npx eslint . -c linters/eslint.config.js",
+    "style:fix": "npx eslint . -c linters/eslint.config.js --fix",
     "style3": "npx oxlint -D all -A no-console -A max-params -A prefer-add-event-listener -A no-useless-undefined -A no-undefined -A no-async-await -A func-names -A default-case -A filename-case -A no-lonely-if -A sort-keys -A no-magic-numbers -A no-plusplus -A prefer-global-this -A id-length -A yoda -A func-style -A switch-case-braces -A max-lines-per-function -A init-declarations -A prefer-set-has -A no-continue -A prefer-destructuring -A prefer-template -A no-null -A catch-error-name -A sort-imports -A no-rest-spread-properties -A no-eq-null -A no-optional-chaining -A no-await-in-loop -A no-negated-condition -A new-cap -A no-alert -A eqeqeq --threads=1 --deny-warnings  --ignore-pattern=src/js/lib/* ./src",
     "style4": "npx oxlint --threads=1 --deny-warnings ./src",
     "test": "node --test --test-reporter dot",
@@ -19,7 +19,7 @@
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
   "devDependencies": {
-    "devdeps": "github:asavan/dev-deps#be888503292db23595287bf00d1a18ed9aa69923"
+    "devdeps": "github:asavan/dev-deps#6eee345d2f6c72bb2162c91f137a30ad915b8361"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
