@@ -18,8 +18,13 @@
     "updates": "npx ncu",
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asavan/netutils.git"
+  },
+  "homepage": "https://github.com/asavan/netutils",
   "devDependencies": {
-    "devdeps": "github:asavan/dev-deps#6eee345d2f6c72bb2162c91f137a30ad915b8361"
+    "devdeps": "github:asavan/dev-deps#v0.0.4"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
