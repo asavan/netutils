@@ -32,22 +32,22 @@ export default function createDataChannel(id, logger) {
 
     const send = (action, data, to, ignore) => {
         if (!isConnected) {
-            console.error("Not connected");
+            logger.error("Not connected");
             return false;
         }
         if (!clientId) {
-            console.error("No client");
+            logger.error("No client");
             console.trace("How");
         }
         if (to === undefined) {
             to = clientId;
         }
         if (to !== "all" && to !== clientId) {
-            console.error("Bad client", to, clientId);
+            logger.error("Bad client", to, clientId);
             console.trace("Bad client");
         }
         if (!dataChannel) {
-            console.error("Not data channel");
+            logger.error("Not data channel");
             return false;
         }
         // const json = {from: id, to: clientId, action, data};
@@ -101,7 +101,7 @@ export default function createDataChannel(id, logger) {
         clientId = data.id;
         const answer = {type: "answer", sdp: data.sdp};
         await peerConnection.setRemoteDescription(answer);
-        await processCandidates(data.c, peerConnection);
+        await processCandidates(data.cands, peerConnection);
     }
 
     async function getOfferAndCands() {
@@ -111,7 +111,7 @@ export default function createDataChannel(id, logger) {
         logger.log("cands", cands);
         return {
             offer,
-            c: cands,
+            cands: cands,
             id
         };
     }

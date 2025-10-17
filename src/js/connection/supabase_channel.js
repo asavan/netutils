@@ -19,8 +19,8 @@ function createSignalingChannelWithNameByClient(name, id, logger, supabase) {
     let needClose = true;
     logger.log("chan: " + name);
 
-    const send = (type, sdp, to, ignore) => {
-        const json = {from: id, to: to, action: type, data: sdp, ignore};
+    const send = (type, data, to, ignore) => {
+        const json = {from: id, to: to, action: type, data, ignore};
         logger.log(name, "Sending [" + id + "] to [" + to + "]: " + JSON.stringify(json));
         return myChannel.send({
             type: "broadcast",

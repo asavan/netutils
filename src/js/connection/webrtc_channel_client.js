@@ -55,7 +55,7 @@ export default function createDataChannel(id, logger) {
         };
         const offer = offerAndCandidates.offer;
         await peerConnection.setRemoteDescription(offer);
-        await processCandidates(offerAndCandidates.c, peerConnection);
+        await processCandidates(offerAndCandidates.cands, peerConnection);
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
         return answer;
@@ -151,7 +151,7 @@ export default function createDataChannel(id, logger) {
 
         const dataToSend = {sdp: answer.sdp, id};
         if (cands) {
-            dataToSend.c = cands;
+            dataToSend.cands = cands;
         }
         if (signalingChan) {
             const openCon = await sigConnectionPromise.promise;

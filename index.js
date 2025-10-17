@@ -1,4 +1,5 @@
 export { default as createSignalingChannel } from "./src/js/connection/channel_with_name.js";
+export { default as createSignalingChannelClient } from "./src/js/connection/channel_with_name_client.js";
 export { default as broadcastConnectionFunc }  from "./src/js/connection/broadcast.js";
 export { default as createDataChannelServer } from "./src/js/connection/webrtc_channel_server.js";
 export { default as createDataChannelClient } from "./src/js/connection/webrtc_channel_client.js";
@@ -9,5 +10,7 @@ export {default as handlersFunc} from "./src/js/utils/handlers.js";
 export {default as install} from "./src/js/utils/install_as_app.js";
 export {default as loggerFunc} from "./src/js/views/logger.js";
 export {default as scanBarcode} from "./src/js/views/barcode.js";
+export {default as PromiseQueue} from "./src/js/utils/async-queue.js";
+export {default as actionToHandler} from "./src/js/utils/action_to_handler.js";
 export {parseSettings} from "./src/js/utils/parse-settings.js";
 export {assert} from "./src/js/utils/assert.js";

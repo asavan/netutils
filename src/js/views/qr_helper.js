@@ -38,19 +38,13 @@ function chomp(string, c) {
     return string;
 }
 
-function renderQRCodeSVG(text, divElement) {
+function renderQRCodeSVG(text, divElement, image) {
     const options = {
         level: "M",
         padding: 3,
     };
-    if (text.length < 100) {
-        options.image = {
-            source: "./images/sos.png",
-            width: "10%",
-            height: "20%",
-            x: "center",
-            y: "center"
-        };
+    if (text.length < 100 && image) {
+        options.image = image;
     }
     const qrSVG = new QRCodeSVG(text, options);
     divElement.innerHTML = qrSVG.toString();
@@ -72,26 +66,23 @@ export function makeQrString(window, settings) {
     return urlStr;
 }
 
-export function makeQrPlain(urlStr, document, selector) {
-    const el = document.querySelector(selector);
-    if (!el) {
-        console.log("No qr");
-        return el;
-    }
-    const divToRender = document.createElement("div");
-    el.append(divToRender);
-    return makeQrElement(urlStr, divToRender);
-}
-
-export function makeQrElement(urlStr, el) {
+export function makeQrElement(urlStr, el, image) {
     console.log("enemy url", urlStr, urlStr.length);
-    renderQRCodeSVG(urlStr, el);
+    renderQRCodeSVG(urlStr, el, image);
     // bigPicture(el);
     shareAndCopy(el, urlStr);
     bigPicture(el);
     return el;
 }
 
-export function makeQr(window, document, settings) {
-    return makeQrPlain(makeQrString(window, settings), document, ".qrcode");
+export function makeQrStr(str, window, document, settings, image) {
+    const el = document.querySelector(".qrcontainer");
+    const divToRender = document.createElement("div");
+    divToRender.classList.add("qrcode");
+    el.append(divToRender);
+    return makeQrElement(str, el, image);
+}
+
+export function makeQr(window, document, settings, image) {
+    return makeQrStr(makeQrString(window, settings), window, document, settings, image);
 }

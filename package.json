@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
-    "@supabase/supabase-js": "^2.74.0"
+    "@supabase/supabase-js": "^2.74.0",
+    "lz-string": "^1.5.0"
   }
 }

@@ -2,24 +2,37 @@ import {assert} from "./assert.js";
 
 export default function handlersFunc(arr, queue) {
     const handlers = {};
+    let hCounter = 0;
     for (const f of arr) {
-        handlers[f] = [];
+        handlers[f] = {};
     }
+
+    const objKey = (c) => "key" + c;
 
     const actionKeys = () => Object.keys(handlers);
     const getSafe = (name) => {
-        const arr = handlers[name];
-        assert(Array.isArray(arr), "No key " + name);
-        return arr;
+        const obj = handlers[name];
+        assert(obj !== undefined, "No key " + name);
+        return obj;
     };
     const hasAction = (name) => actionKeys().includes(name);
     const on = (name, callback) => {
         assert(typeof callback === "function", "bad setup " + name);
-        getSafe(name).push(callback);
+        const obj = getSafe(name);
+        ++hCounter;
+        const key = objKey(hCounter);
+        obj[key] = callback;
+        return key;
     };
+
+    const unsubscribe = (name, key) => {
+        const obj = getSafe(name);
+        delete obj[key];
+    }
+
     const reset = (name, callback) => {
         assert(hasAction(name), "No name for reset " + name);
-        handlers[name] = [];
+        handlers[name] = {};
         on(name, callback);
     };
     const set = (f, arr1) => {
@@ -27,7 +40,8 @@ export default function handlersFunc(arr, queue) {
     };
     const handler = (name) => (arg) => call(name, arg);
     const call = (name, arg) => {
-        const callbacks = getSafe(name);
+        const obj = getSafe(name);
+        const callbacks = Object.values(obj);
         if (callbacks.length === 0) {
             // console.trace("No handlers " + name);
             return Promise.resolve();
@@ -52,6 +66,7 @@ export default function handlersFunc(arr, queue) {
         reset,
         handler,
         hasAction,
+        unsubscribe,
         actionKeys
     };
 }
