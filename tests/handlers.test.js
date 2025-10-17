@@ -32,18 +32,17 @@ test("unsubscribe", async () => {
         console.log("2", arg);
         ++counter;
     });
-    handler.call("message", 3);
+    await handler.call("message", 3);
     assert.equal(counter, 2, "init correct");
     handler.unsubscribe("message", sub1);
-    handler.call("message", 4);
+    await handler.call("message", 4);
     assert.equal(counter, 3, "unsub incorrect");
 
     handler.unsubscribe("message", sub1);
-    handler.call("message", 5);
+    await handler.call("message", 5);
     assert.equal(counter, 4, "double unsub incorrect");
 
     handler.unsubscribe("message", sub2);
-    handler.call("message", 6);
+    await handler.call("message", 6);
     assert.equal(counter, 4, "unsub incorrect");
 });
-

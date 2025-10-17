@@ -23,7 +23,7 @@ export function subscribe_rtc(chan, actions, onable, keys, logger) {
         for (const key of keys) {
             onable.unsubscribe(key, unsubTikets[key]);
         }
-    }
+    };
 
     return {unsubsribe};
 }

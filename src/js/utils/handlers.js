@@ -28,7 +28,7 @@ export default function handlersFunc(arr, queue) {
     const unsubscribe = (name, key) => {
         const obj = getSafe(name);
         delete obj[key];
-    }
+    };
 
     const reset = (name, callback) => {
         assert(hasAction(name), "No name for reset " + name);
