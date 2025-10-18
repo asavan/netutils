@@ -1,4 +1,3 @@
-import wsChannel from "./websocket_channel.js";
 import netObj from "../utils/net.js";
 import {delayReject} from "../utils/timer.js";
 
@@ -7,6 +6,8 @@ async function createSocketChan(id, logger, location, settings) {
     if (!socketUrl) {
         throw new Error("Bad socket url");
     }
+    const socketModule = await import("./websocket_channel.js");
+    const wsChannel = socketModule.default;
     const chan = wsChannel(id, socketUrl, logger);
     await Promise.race([chan.ready(), delayReject(1000)]);
     return chan;
