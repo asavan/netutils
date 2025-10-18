@@ -26,10 +26,9 @@ export default function addSettingsButton(document, settings) {
             formInstance = null;
         } else {
             controlPanel.classList.remove("minimized");
-            formInstance = createFormBinder(settings);
+            formInstance = createFormBinder(settings, document);
             const anchor = document.querySelector(".panel-content");
             anchor.appendChild(formInstance);
-            formInstance.appendTo(".panel-content");
         }
     });
 }

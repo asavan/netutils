@@ -3,19 +3,20 @@
  * Значения в объекте изменяются сразу после изменения формы.
  *
  * @param {Object} obj - Объект с булевыми значениями, строками, целыми числами и массивами строк
+ * @param document
  * @returns {HTMLElement} - HTML-форма
  */
-export default function createFormBinder(obj) {
+export default function createFormBinder(obj, document) {
     // Создаем элемент формы
-    const form = document.createElement('form');
-    form.className = 'formbinder-form';
+    const form = document.createElement("form");
+    form.className = "formbinder-form";
 
     // Сначала определяем, какие поля имеют парные значения (с суффиксом s и без)
     const pairedFields = new Set();
     for (const key in obj) {
-        if (key.endsWith('s') && Array.isArray(obj[key])) {
+        if (key.endsWith("s") && Array.isArray(obj[key])) {
             const baseKey = key.slice(0, -1);
-            if (obj.hasOwnProperty(baseKey)) {
+            if (baseKey in obj) {
                 pairedFields.add(baseKey);
             }
         }
@@ -32,54 +33,54 @@ export default function createFormBinder(obj) {
         }
 
         // Создаем контейнер для элемента управления
-        const div = document.createElement('div');
-        div.className = 'formbinder-field-container';
+        const div = document.createElement("div");
+        div.className = "formbinder-field-container";
 
         // Создаем метку для элемента управления
-        const label = document.createElement('label');
+        const label = document.createElement("label");
         label.htmlFor = key;
-        label.textContent = key + ': ';
-        label.className = 'formbinder-label';
+        label.textContent = key + ": ";
+        label.className = "formbinder-label";
 
-        if (type === 'boolean') {
+        if (type === "boolean") {
             // Создаем чекбокс для булевых значений
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
             checkbox.id = key;
             checkbox.checked = value;
 
             // Добавляем обработчик события изменения чекбокса
-            checkbox.addEventListener('change', () => {
+            checkbox.addEventListener("change", () => {
                 obj[key] = checkbox.checked;
             });
 
             // Добавляем элементы в контейнер
             div.appendChild(label);
             div.appendChild(checkbox);
-        } else if (type === 'string') {
+        } else if (type === "string") {
             // Создаем текстовое поле для строк
-            const input = document.createElement('input');
-            input.type = 'text';
+            const input = document.createElement("input");
+            input.type = "text";
             input.id = key;
             input.value = value;
 
             // Добавляем обработчик события изменения текстового поля
-            input.addEventListener('input', () => {
+            input.addEventListener("input", () => {
                 obj[key] = input.value;
             });
 
             // Добавляем элементы в контейнер
             div.appendChild(label);
             div.appendChild(input);
-        } else if (type === 'number' && Number.isInteger(value)) {
+        } else if (type === "number" && Number.isInteger(value)) {
             // Создаем текстовое поле для целых чисел
-            const input = document.createElement('input');
-            input.type = 'number';
+            const input = document.createElement("input");
+            input.type = "number";
             input.id = key;
             input.value = value;
 
             // Добавляем обработчик события изменения числового поля
-            input.addEventListener('input', () => {
+            input.addEventListener("input", () => {
                 const numValue = parseInt(input.value, 10);
                 if (!isNaN(numValue)) {
                     obj[key] = numValue;
@@ -89,15 +90,14 @@ export default function createFormBinder(obj) {
             // Добавляем элементы в контейнер
             div.appendChild(label);
             div.appendChild(input);
-        } else if (Array.isArray(value) && key.endsWith('s')) {
-             // Создаем выпадающий список для массива строк
-            const select = document.createElement('select');
+        } else if (Array.isArray(value) && key.endsWith("s")) {
+            // Создаем выпадающий список для массива строк
+            const select = document.createElement("select");
             select.id = key;
             const baseKey = key.slice(0, -1);
-            const hasPairedField = obj.hasOwnProperty(baseKey);
-            const pairedValue = hasPairedField ? obj[baseKey] : '';
+            const hasPairedField = baseKey in obj;
             value.forEach(optionValue => {
-                const option = document.createElement('option');
+                const option = document.createElement("option");
                 option.value = optionValue;
                 option.textContent = optionValue;
 
@@ -108,23 +108,23 @@ export default function createFormBinder(obj) {
 
                 select.appendChild(option);
             });
-            select.addEventListener('change', () => {
+            select.addEventListener("change", () => {
                 obj[baseKey] = select.value;
             });
             div.appendChild(label);
             div.appendChild(select);
         } else {
             // Для других типов данных создаем текстовое поле с отображением типа
-            const input = document.createElement('input');
-            input.type = 'text';
+            const input = document.createElement("input");
+            input.type = "text";
             input.id = key;
             input.value = value.toString();
             input.disabled = true;
 
             // Добавляем информацию о неподдерживаемом типе
-            const info = document.createElement('span');
+            const info = document.createElement("span");
             // info.textContent = ` (неподдерживаемый тип: ${type})`;
-            info.className = 'formbinder-error';
+            info.className = "formbinder-error";
 
             // Добавляем элементы в контейнер
             div.appendChild(label);
@@ -153,7 +153,7 @@ const myObject = {
   mode: "hard"
 };
 
-const form = createFormBinder(myObject);
+const form = createFormBinder(myObject, document);
 document.body.appendChild(form);
 
 // Будет создан только один dropdown select для выбора режима
