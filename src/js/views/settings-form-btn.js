@@ -1,4 +1,4 @@
-import createBooleanForm from "./settings-form.js";
+import createFormBinder from "./formbinder_v2.js";
 import fullScreen from "./fullscreen.js";
 
 export default function addSettingsButton(document, settings) {
@@ -22,11 +22,13 @@ export default function addSettingsButton(document, settings) {
         const controlPanel = document.querySelector("#control-panel");
         if (formInstance) {
             controlPanel.classList.add("minimized");
-            formInstance.destroy();
+            formInstance.remove();
             formInstance = null;
         } else {
             controlPanel.classList.remove("minimized");
-            formInstance = createBooleanForm(settings);
+            formInstance = createFormBinder(settings);
+            const anchor = document.querySelector(".panel-content");
+            anchor.appendChild(formInstance);
             formInstance.appendTo(".panel-content");
         }
     });
