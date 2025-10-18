@@ -21,8 +21,6 @@ async function makeSupaChanServer(id, settings, logger) {
     });
 
     await Promise.all([chan.ready(), lobbyChanel.ready()]);
-
-    chan.clientModeName = () => "csupa";
     logger.log("supa chan ready");
     return chan;
 }
