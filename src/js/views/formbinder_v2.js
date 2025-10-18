@@ -1,3 +1,7 @@
+function idForKey(key) {
+    return `field-${key}`;
+}
+
 /**
  * Создает HTML-форму, связанную с JavaScript-объектом.
  * Значения в объекте изменяются сразу после изменения формы.
@@ -38,7 +42,7 @@ export default function createFormBinder(obj, document) {
 
         // Создаем метку для элемента управления
         const label = document.createElement("label");
-        label.htmlFor = key;
+        label.htmlFor = idForKey(key);
         label.textContent = key + ": ";
         label.className = "formbinder-label";
 
@@ -46,7 +50,7 @@ export default function createFormBinder(obj, document) {
             // Создаем чекбокс для булевых значений
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.id = key;
+            checkbox.id = idForKey(key);
             checkbox.checked = value;
 
             // Добавляем обработчик события изменения чекбокса
@@ -61,7 +65,7 @@ export default function createFormBinder(obj, document) {
             // Создаем текстовое поле для строк
             const input = document.createElement("input");
             input.type = "text";
-            input.id = key;
+            input.id = idForKey(key);
             input.value = value;
 
             // Добавляем обработчик события изменения текстового поля
@@ -76,7 +80,7 @@ export default function createFormBinder(obj, document) {
             // Создаем текстовое поле для целых чисел
             const input = document.createElement("input");
             input.type = "number";
-            input.id = key;
+            input.id = idForKey(key);
             input.value = value;
 
             // Добавляем обработчик события изменения числового поля
@@ -93,7 +97,7 @@ export default function createFormBinder(obj, document) {
         } else if (Array.isArray(value) && key.endsWith("s")) {
             // Создаем выпадающий список для массива строк
             const select = document.createElement("select");
-            select.id = key;
+            select.id = idForKey(key);
             const baseKey = key.slice(0, -1);
             const hasPairedField = baseKey in obj;
             value.forEach(optionValue => {
@@ -117,7 +121,7 @@ export default function createFormBinder(obj, document) {
             // Для других типов данных создаем текстовое поле с отображением типа
             const input = document.createElement("input");
             input.type = "text";
-            input.id = key;
+            input.id = idForKey(key);
             input.value = value.toString();
             input.disabled = true;
 
