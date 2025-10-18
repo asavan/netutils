@@ -6,7 +6,7 @@ export default function loggerFunc(document, settings, level, el, markerName) {
         el = document.querySelector(el);
     }
     const logHtml = (message, el) => {
-        if (!el) {
+        if (!el && settings.logger) {
             el = document.querySelector(settings.logger);
         }
         if (el) {
