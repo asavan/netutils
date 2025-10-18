@@ -40,9 +40,10 @@ export default async function createSignalingChannel(id, serverId, location, set
         return createSupaChan(id, serverId, settings, logger);
     case "auto":
         return createAutoChan(id, serverId, location, settings, logger);
-    case "fake":
+    case "fake": {
         const fakeChan = await import("./fake_channel.js");
         return fakeChan.default(id, logger);
+    }
     case "none":
         return null;
     }
