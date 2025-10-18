@@ -31,9 +31,17 @@ function getWebSocketUrl(settings, location) {
     return "ws://" + location.hostname + ":" + settings.wsPort;
 }
 
+function getHostUrl(settings, location) {
+    if (settings.sh) {
+        return settings.sh;
+    }
+    const urlWithoutParams = location.origin + location.pathname;
+    return urlWithoutParams;
+}
 
 export default {
     getMyId,
     setupMedia,
+    getHostUrl,
     getWebSocketUrl
 };
