@@ -8,6 +8,7 @@ export {delay, delayReject} from "./src/js/utils/timer.js";
 export {default as handlersFunc} from "./src/js/utils/handlers.js";
 export {default as install} from "./src/js/utils/install_as_app.js";
 export {default as loggerFunc} from "./src/js/views/logger.js";
+export {makeQrStr} from "./src/js/views/qr_helper.js";
 export {default as scanBarcode} from "./src/js/views/barcode.js";
 export {default as PromiseQueue} from "./src/js/utils/async-queue.js";
 export {default as actionToHandler} from "./src/js/utils/action_to_handler.js";

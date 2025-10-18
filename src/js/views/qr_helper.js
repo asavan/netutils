@@ -16,7 +16,7 @@ async function writeClipboardText(text) {
 
 function shareAndCopy(elem, url) {
     const shareData = {
-        title: "Sos game",
+        title: "Game",
         url: url,
     };
     elem.addEventListener("dblclick", async () => {
@@ -31,7 +31,7 @@ function shareAndCopy(elem, url) {
     });
 }
 
-function chomp(string, c) {
+export function chomp(string, c) {
     if (string.endsWith(c)) {
         return string.slice(0, -c.length);
     }
@@ -56,17 +56,8 @@ export function removeElem(el) {
     }
 }
 
-export function makeQrString(window, settings) {
-    const staticHost = settings.sh || (window.location.origin + window.location.pathname);
-    const url = new URL(staticHost);
-    if (settings.seed) {
-        url.searchParams.set("seed", settings.seed);
-    }
-    const urlStr = chomp(url.toString(), "/");
-    return urlStr;
-}
-
 export function makeQrElement(urlStr, el, image) {
+    // urlStr = chomp(urlStr, "/");
     console.log("enemy url", urlStr, urlStr.length);
     renderQRCodeSVG(urlStr, el, image);
     // bigPicture(el);
@@ -81,8 +72,4 @@ export function makeQrStr(str, window, document, settings, image) {
     divToRender.classList.add("qrcode");
     el.append(divToRender);
     return makeQrElement(str, el, image);
-}
-
-export function makeQr(window, document, settings, image) {
-    return makeQrStr(makeQrString(window, settings), window, document, settings, image);
 }

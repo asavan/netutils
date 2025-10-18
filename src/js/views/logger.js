@@ -2,13 +2,13 @@ export default function loggerFunc(document, settings, level, el, markerName) {
     if (!level) {
         level = settings.logLevel;
     }
-    if (!el) {
-        el = settings.logger;
-    }
-    if (el && typeof el === "string") {
-        el = document.querySelector(el);
-    }
     const logHtml = (message) => {
+        if (!el) {
+            el = settings.logger;
+        }
+        if (el && typeof el === "string") {
+            el = document.querySelector(el);
+        }
         if (el) {
             if (Error.isError(message)) {
                 message = message.toString();
