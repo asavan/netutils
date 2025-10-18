@@ -71,5 +71,5 @@ export function makeQrStr(str, window, document, settings, image) {
     const divToRender = document.createElement("div");
     divToRender.classList.add("qrcode");
     el.append(divToRender);
-    return makeQrElement(str, el, image);
+    return makeQrElement(str, divToRender, image);
 }
