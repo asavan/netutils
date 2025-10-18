@@ -1,7 +1,5 @@
 import wsChannel from "./websocket_channel.js";
-import fakeChan from "./fake_channel.js";
 import netObj from "../utils/net.js";
-import supaLobby from "./supabase_lobby.js";
 import {delayReject} from "../utils/timer.js";
 
 async function createSocketChan(id, logger, location, settings) {
@@ -14,7 +12,9 @@ async function createSocketChan(id, logger, location, settings) {
     return chan;
 }
 
-function createSupaChan(id, serverId, settings, logger) {
+async function createSupaChan(id, serverId, settings, logger) {
+    const lobbyModule = await import("./supabase_lobby.js");
+    const supaLobby = lobbyModule.default;
     if (id === serverId) {
         return supaLobby.makeSupaChanServer(id, settings, logger);
     }
@@ -31,7 +31,7 @@ async function createAutoChan(id, serverId, location, settings, logger) {
     }
 }
 
-export default function createSignalingChannel(id, serverId, location, settings, logger) {
+export default async function createSignalingChannel(id, serverId, location, settings, logger) {
     const channelType = settings.channelType;
     switch (channelType) {
     case "socket":
@@ -41,7 +41,8 @@ export default function createSignalingChannel(id, serverId, location, settings,
     case "auto":
         return createAutoChan(id, serverId, location, settings, logger);
     case "fake":
-        return fakeChan(id, logger);
+        const fakeChan = await import("./fake_channel.js");
+        return fakeChan.default(id, logger);
     case "none":
         return null;
     }
