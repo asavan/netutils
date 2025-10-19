@@ -11,10 +11,14 @@ export default function addSettingsButton(document, settings) {
         maxBtn.classList.remove("hidden");
         qrBtn.classList.remove("hidden");
     } else {
-        resizeBtn.classList.remove("hidden");
         maxBtn.classList.add("hidden");
         qrBtn.classList.add("hidden");
-        fullScreen(document, resizeBtn);
+        if (document.requestFullscreen) {
+            resizeBtn.classList.remove("hidden");
+            fullScreen(document, resizeBtn);
+        } else {
+            resizeBtn.classList.add("hidden");
+        }
     }
 
     maxBtn.addEventListener("click", (e) => {
