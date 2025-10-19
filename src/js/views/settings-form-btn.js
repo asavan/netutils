@@ -13,7 +13,7 @@ export default function addSettingsButton(document, settings) {
     } else {
         maxBtn.classList.add("hidden");
         qrBtn.classList.add("hidden");
-        if (document.requestFullscreen) {
+        if (document.exitFullscreen) {
             resizeBtn.classList.remove("hidden");
             fullScreen(document, resizeBtn);
         } else {
