@@ -15,20 +15,22 @@ async function writeClipboardText(text) {
 }
 
 function shareAndCopy(elem, url) {
-    const shareData = {
-        title: "Game",
-        url: url,
-    };
-    elem.addEventListener("dblclick", async () => {
+    elem.addEventListener("click", async () => {
         await writeClipboardText(url);
-        try {
-            if (navigator.share && navigator.maxTouchPoints > 1) {
-                await navigator.share(shareData);
-            }
-        } catch (err) {
-            console.error(err);
-        }
     });
+    if (navigator.share && navigator.maxTouchPoints > 1) {
+        const shareData = {
+            title: "Game",
+            url: url,
+        };
+        elem.addEventListener("dblclick", async () => {
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    }
 }
 
 export function chomp(string, c) {
