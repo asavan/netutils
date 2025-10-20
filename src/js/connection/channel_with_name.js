@@ -39,7 +39,8 @@ async function createAutoChanCs(id, location, settings, logger) {
     } catch (err) {
         logger.error(err);
         const lobbyModule = await import("./supabase_lobby.js");
-        return lobbyModule.makeSupaChanClientOrServer(id, settings, logger);
+        const supaLobby = lobbyModule.default;
+        return supaLobby.makeSupaChanClientOrServer(id, settings, logger);
     }
 }
 
