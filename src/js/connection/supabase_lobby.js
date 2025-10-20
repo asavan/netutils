@@ -90,9 +90,11 @@ async function makeSupaChanClient(id, settings, logger, serverId) {
     return gameChannel;
 }
 
-async function makeSupaChanClientOrServer(id, settings, logger) {
+async function makeSupaChanClientOrServer(id, serverId, settings, logger) {
     const supabaseClient = supaChannel.createSupaClient();
-    const serverId = await prepareLobbyClientOrServer(id, settings, logger, supabaseClient);
+    if (!serverId) {
+        serverId = await prepareLobbyClientOrServer(id, settings, logger, supabaseClient);
+    }
     logger.log("client try connect to " + serverId);
     const gameChannel = supaChannel.createSignalingChannelWithNameByClient(
         supaChannel.getConnectionUrl(serverId, settings), id, logger, supabaseClient);

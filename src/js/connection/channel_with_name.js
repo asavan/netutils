@@ -32,7 +32,7 @@ async function createAutoChan(id, serverId, location, settings, logger) {
     }
 }
 
-async function createAutoChanCs(id, location, settings, logger) {
+async function createAutoChanCs(id, serverId, location, settings, logger) {
     try {
         const chan = await createSocketChan(id, logger, location, settings);
         return chan;
@@ -40,7 +40,7 @@ async function createAutoChanCs(id, location, settings, logger) {
         logger.error(err);
         const lobbyModule = await import("./supabase_lobby.js");
         const supaLobby = lobbyModule.default;
-        return supaLobby.makeSupaChanClientOrServer(id, settings, logger);
+        return supaLobby.makeSupaChanClientOrServer(id, serverId, settings, logger);
     }
 }
 
@@ -54,7 +54,7 @@ export default async function createSignalingChannel(id, serverId, location, set
     case "auto":
         return createAutoChan(id, serverId, location, settings, logger);
     case "autocs":
-        return createAutoChanCs(id, location, settings, logger);
+        return createAutoChanCs(id, serverId, location, settings, logger);
     case "fake": {
         const fakeChan = await import("./fake_channel.js");
         return fakeChan.default(id, logger);
