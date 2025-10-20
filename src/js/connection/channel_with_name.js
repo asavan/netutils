@@ -32,6 +32,17 @@ async function createAutoChan(id, serverId, location, settings, logger) {
     }
 }
 
+async function createAutoChanCs(id, location, settings, logger) {
+    try {
+        const chan = await createSocketChan(id, logger, location, settings);
+        return chan;
+    } catch (err) {
+        logger.error(err);
+        const lobbyModule = await import("./supabase_lobby.js");
+        return lobbyModule.makeSupaChanClientOrServer(id, settings, logger);
+    }
+}
+
 export default async function createSignalingChannel(id, serverId, location, settings, logger) {
     const channelType = settings.channelType;
     switch (channelType) {
@@ -41,6 +52,8 @@ export default async function createSignalingChannel(id, serverId, location, set
         return createSupaChan(id, serverId, settings, logger);
     case "auto":
         return createAutoChan(id, serverId, location, settings, logger);
+    case "autocs":
+        return createAutoChanCs(id, location, settings, logger);
     case "fake": {
         const fakeChan = await import("./fake_channel.js");
         return fakeChan.default(id, logger);
