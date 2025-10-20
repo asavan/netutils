@@ -46,7 +46,7 @@ async function prepareLobbyClientCommon(id, settings, logger, supabaseClient) {
     });
     await lobbyChanel.ready();
     lobbyChanel.send("join", {}, "all");
-    const serverId = await Promise.race([await delay(700), serverPromise.promise]);
+    const serverId = await Promise.race([delay(700), serverPromise.promise]);
     logger.log("connected", id);
     lobbyChanel.unsubscribe("message", unSubToken);
 
