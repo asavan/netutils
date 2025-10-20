@@ -7,21 +7,21 @@ export default function addSettingsButton(document, settings) {
     const qrBtn = document.querySelector(".qr-btn");
     let formInstance = null;
     if (settings.mode === "server" || settings.mode === "swrtc" || settings.mode === "ssupa") {
-        resizeBtn.classList.add("hidden");
-        maxBtn.classList.remove("hidden");
-        qrBtn.classList.remove("hidden");
+        resizeBtn?.classList.add("hidden");
+        maxBtn?.classList.remove("hidden");
+        qrBtn?.classList.remove("hidden");
     } else {
-        maxBtn.classList.add("hidden");
-        qrBtn.classList.add("hidden");
-        if (document.exitFullscreen) {
+        maxBtn?.classList.add("hidden");
+        qrBtn?.classList.add("hidden");
+        if (resizeBtn && document.exitFullscreen) {
             resizeBtn.classList.remove("hidden");
             fullScreen(document, resizeBtn);
         } else {
-            resizeBtn.classList.add("hidden");
+            resizeBtn?.classList.add("hidden");
         }
     }
 
-    maxBtn.addEventListener("click", (e) => {
+    maxBtn?.addEventListener("click", (e) => {
         e.preventDefault();
         const controlPanel = document.querySelector("#control-panel");
         if (formInstance) {
