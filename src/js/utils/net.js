@@ -12,12 +12,14 @@ function setupMedia() {
 }
 
 function getMyId(window, settings, rngEngine) {
-    const data = window.sessionStorage.getItem(settings.idNameInStorage);
+    const name = settings.idNameInStorage || "my-id";
+    const data = window.sessionStorage.getItem(name);
     if (data) {
         return data;
     }
-    const newId = rngFunc.makeId(settings.idNameLen, rngEngine);
-    window.sessionStorage.setItem(settings.idNameInStorage, newId);
+    const len = settings.idNameLen || 6;
+    const newId = rngFunc.makeId(len, rngEngine);
+    window.sessionStorage.setItem(name, newId);
     return newId;
 }
 
