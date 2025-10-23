@@ -2,9 +2,10 @@ import loggerFunc from "../views/logger.js";
 import createSignalingChannel from "./channel_with_name.js";
 import createDataChannel from "./webrtc_channel_server.js";
 import {makeQrStr, removeElem} from "../views/qr_helper.js";
+import JSONCrush from "jsoncrush";
 import scanBarcode from "../views/barcode.js";
-import LZString from "../../../node_modules/lz-string/libs/lz-string.js";
 import {delayReject} from "../utils/timer.js";
+import {netObj} from "../../../index.js";
 
 function showReadBtn(window, document, logger) {
     const barCodeReady = Promise.withResolvers();
@@ -21,7 +22,7 @@ function showReadBtn(window, document, logger) {
             }
             codes = sign;
         }
-        const decode = LZString.decompressFromEncodedURIComponent(codes);
+        const decode = JSONCrush.uncrush(codes);
         barCodeReady.resolve(JSON.parse(decode));
     });
 
@@ -29,13 +30,18 @@ function showReadBtn(window, document, logger) {
 }
 
 function showQr(window, document, settings, dataToSend) {
-    const currentUrl = new URL(window.location.href);
-    const urlWithoutParams = currentUrl.origin + currentUrl.pathname;
+    const urlWithoutParams = netObj.getHostUrl(settings, window.location);
     const baseUrl = urlWithoutParams;
-    const jsonString = JSON.stringify(dataToSend);
-    const encoded2 = LZString.compressToEncodedURIComponent(jsonString);
-    const url2 = baseUrl + "?z=" + encoded2;
-    const qr = makeQrStr(url2, window, document, settings);
+    let url4 = baseUrl;
+    if (dataToSend) {
+        const jsonString = JSON.stringify(dataToSend);
+        const encoded3 = JSONCrush.crush(jsonString);
+        const encoded4 = window.encodeURIComponent(encoded3);
+        url4 = baseUrl + "?z=" + encoded4;
+    } else {
+        console.log("No data", dataToSend);
+    }
+    const qr = makeQrStr(url4, window, document, settings);
     return qr;
 }
 
@@ -48,7 +54,7 @@ export async function server_chan(myId, window, document, settings) {
     const dataChanLogger = loggerFunc(document, settings, 1);
     const dataChan = createDataChannel(myId, dataChanLogger);
     const dataToSend = await dataChan.getDataToSend();
-    const qr = showQr(window, document, dataToSend);
+    const qr = showQr(window, document, settings, dataToSend);
     showReadBtn(window, document, mainLogger).then((answerAndCand) => {
         mainLogger.log(answerAndCand);
         dataChan.resolveExternal(answerAndCand);
