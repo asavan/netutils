@@ -93,7 +93,9 @@ export default function createDataChannel(id, logger) {
     async function updateOffer() {
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
-        offerWaiter.resolve(offer);
+        logger.log("create offer", JSON.stringify(offer), JSON.stringify(peerConnection.localDescription), peerConnection.currentLocalDescription);
+        const offerFunc = () => peerConnection.localDescription;
+        offerWaiter.resolve(offerFunc);
         return offer;
     }
 
@@ -101,17 +103,20 @@ export default function createDataChannel(id, logger) {
         clientId = data.id;
         const answer = {type: "answer", sdp: data.sdp};
         await peerConnection.setRemoteDescription(answer);
-        await processCandidates(data.cands, peerConnection);
+        if (data.cands) {
+            await processCandidates(data.cands, peerConnection);
+        }
+        logger.log("answer", data);
     }
 
     async function getOfferAndCands() {
         const timer = delayReject(2000);
-        const offer = await offerWaiter.promise;
+        const offerFunc = await offerWaiter.promise;
         const cands = await Promise.race([candidateWaiter.promise, timer]).catch(() => []);
-        logger.log("cands", cands);
+        const offer = offerFunc();
+        logger.log("cands", cands.length);
         return {
             offer,
-            cands: cands,
             id
         };
     }

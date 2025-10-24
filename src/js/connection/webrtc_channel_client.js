@@ -55,10 +55,13 @@ export default function createDataChannel(id, logger) {
         };
         const offer = offerAndCandidates.offer;
         await peerConnection.setRemoteDescription(offer);
-        await processCandidates(offerAndCandidates.cands, peerConnection);
+        if (offerAndCandidates.cands) {
+            await processCandidates(offerAndCandidates.cands, peerConnection);
+        }
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
-        return answer;
+        logger.log("set answer", JSON.stringify(answer), JSON.stringify(peerConnection.localDescription));
+        return () => peerConnection.localDescription;
     }
 
     function getCandidates() {
@@ -148,11 +151,9 @@ export default function createDataChannel(id, logger) {
         const timer = delay(2000);
         const candidatesPromice = getCandidates();
         const cands = await Promise.race([candidatesPromice, timer]);
-
-        const dataToSend = {sdp: answer.sdp, id};
-        if (cands) {
-            dataToSend.cands = cands;
-        }
+        const answer1 = answer();
+        const dataToSend = {sdp: answer1.sdp, id};
+        logger.log("send reply", dataToSend, answer1, cands);
         if (signalingChan) {
             const openCon = await sigConnectionPromise.promise;
             openCon.sendRawTo("offer_and_cand", dataToSend, serverId);

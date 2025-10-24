@@ -24,6 +24,7 @@ async function main(window, document) {
         const clientChan = await client_chan(myId, window, document, settings);
         console.log("Client", clientChan);
     } catch (e) {
+        console.log(e);
         const chan = await server_chan(myId, window, document, settings);
         console.log("Never", chan);
     }

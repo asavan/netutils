@@ -51,7 +51,7 @@ export async function server_chan(myId, window, document, settings) {
     const signalingLogger = loggerFunc(document, settings, 1);
     const gameChannelPromise = createSignalingChannel(myId, myId, window.location, settings, signalingLogger);
     const sigChan = await Promise.race([gameChannelPromise, delayReject(5000)]).catch(() => null);
-    const dataChanLogger = loggerFunc(document, settings, 1);
+    const dataChanLogger = loggerFunc(document, settings, 3);
     const dataChan = createDataChannel(myId, dataChanLogger);
     const dataToSend = await dataChan.getDataToSend();
     const qr = showQr(window, document, settings, dataToSend);
