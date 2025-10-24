@@ -129,7 +129,9 @@ export default function createDataChannel(id, logger) {
 
         dataChannel.onopen = function () {
             logger.log("------ DATACHANNEL OPENED ------");
-            logger.log("datachanid " + dataChannel.id, dataChannel.label);
+            const sctp = peerConnection.sctp;
+            const maxMessageSize = sctp.maxMessageSize;
+            logger.log("datachanid " + dataChannel.id, dataChannel.label, maxMessageSize);
             isConnected = true;
             connectionPromise.resolve(id);
             if (isReconnect) {
