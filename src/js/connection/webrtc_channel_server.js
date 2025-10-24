@@ -11,7 +11,7 @@ export default function createDataChannel(id, logger) {
     let clientId = null;
 
     let candidateWaiter = Promise.withResolvers();
-    let offerWaiter = Promise.withResolvers();
+    let offerPromise = Promise.withResolvers().promise;
     let answerAndCandPromise = Promise.withResolvers();
 
     let peerConnection = null;
@@ -24,8 +24,8 @@ export default function createDataChannel(id, logger) {
         candidateWaiter = Promise.withResolvers();
         answerAndCandPromise = Promise.withResolvers();
         connectionPromise = Promise.withResolvers();
-        offerWaiter = Promise.withResolvers();
-        return updateOffer();
+        offerPromise = updateOffer();
+        return offerPromise;
     };
 
     const resolveExternal = (data) => answerAndCandPromise.resolve(data);
@@ -91,12 +91,11 @@ export default function createDataChannel(id, logger) {
     }
 
     async function updateOffer() {
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        logger.log("create offer", JSON.stringify(offer), JSON.stringify(peerConnection.localDescription), peerConnection.currentLocalDescription);
-        const offerFunc = () => peerConnection.localDescription;
-        offerWaiter.resolve(offerFunc);
-        return offer;
+        // const offer = await peerConnection.createOffer();
+        // await peerConnection.setLocalDescription(offer);
+        // logger.log("create offer", offer);
+        await peerConnection.setLocalDescription();
+        return () => peerConnection.localDescription;
     }
 
     async function setAnswerAndCand(data) {
@@ -111,7 +110,7 @@ export default function createDataChannel(id, logger) {
 
     async function getOfferAndCands() {
         const timer = delayReject(2000);
-        const offerFunc = await offerWaiter.promise;
+        const offerFunc = await offerPromise;
         const cands = await Promise.race([candidateWaiter.promise, timer]).catch(() => []);
         const offer = offerFunc();
         logger.log("cands", cands.length);
@@ -177,7 +176,7 @@ export default function createDataChannel(id, logger) {
 
     async function getDataToSend() {
         setupConnection();
-        await updateOffer();
+        offerPromise = updateOffer();
         const dataToSend = await getOfferAndCands();
         return dataToSend;
     }
