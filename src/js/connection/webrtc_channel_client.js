@@ -58,9 +58,9 @@ export default function createDataChannel(id, logger) {
         if (offerAndCandidates.cands) {
             await processCandidates(offerAndCandidates.cands, peerConnection);
         }
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        logger.log("set answer", JSON.stringify(answer), JSON.stringify(peerConnection.localDescription));
+        // const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription();
+        logger.log("set answer", JSON.stringify(peerConnection.localDescription));
         return () => peerConnection.localDescription;
     }
 
