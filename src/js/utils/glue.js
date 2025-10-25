@@ -19,7 +19,7 @@ function glue(keys, onable, callable) {
         for (const unsub of unsubArr) {
             unsub();
         }
-    }
+    };
     return unsubscribe;
 }
 

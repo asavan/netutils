@@ -34,7 +34,7 @@ export default function handlersFunc(arr, queue) {
         for (const f of arr) {
             handlers[f] = {};
         }
-    }
+    };
 
     const reset = (name, callback) => {
         assert(hasAction(name), "No name for reset " + name);

@@ -184,14 +184,14 @@ export default function createDataChannel(id, logger) {
 
     function setupChan(signalingChan) {
         const actions = {
-            "offer_and_cand": async (data) => {
+            "offer_and_cand": (data) => {
                 logger.log("offerCand", data);
                 answerAndCandPromise.resolve(data.data);
                 return Promise.race([connectionPromise.promise, delayReject(20000)]).catch(() => {
                     if (clientId != null) {
                         signalingChan.send("stop_waiting", {}, clientId);
-                        connectionPromise.reject("timeout7");
                     }
+                    connectionPromise.reject("timeout7");
                 });
             },
             "join": async (data) => {

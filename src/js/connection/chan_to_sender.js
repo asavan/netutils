@@ -44,6 +44,6 @@ export function broad_chan_to_actions(chan, actions, logger, useDataOnly, id) {
     const unsubscribeAll = () => {
         unsub2();
         bcs.unsubscribeAll();
-    }
+    };
     return unsubscribeAll;
 }
