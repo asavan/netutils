@@ -49,8 +49,10 @@ export async function server_chan(myId, window, document, settings) {
     const mainLogger = loggerFunc(document, settings);
 
     const signalingLogger = loggerFunc(document, settings, 1);
-    const gameChannelPromise = createSignalingChannel(myId, myId, window.location, settings, signalingLogger);
-    const sigChan = await Promise.race([gameChannelPromise, delayReject(5000)]).catch(() => null);
+    const gameChannelPromise = Promise.race([
+        createSignalingChannel(myId, myId, window.location, settings, signalingLogger),
+        delayReject(5000)
+    ]).catch(() => null);
     const dataChanLogger = loggerFunc(document, settings, 3);
     const dataChan = createDataChannel(myId, dataChanLogger);
     const dataToSend = await dataChan.getDataToSend();
@@ -61,8 +63,9 @@ export async function server_chan(myId, window, document, settings) {
     }).catch(err => {
         mainLogger.error(err);
     });
+    const sigChan = await gameChannelPromise;
     if (sigChan) {
-        await dataChan.setupChan(sigChan);
+        dataChan.setupChan(sigChan);
     }
     await dataChan.processAns();
     await dataChan.ready();

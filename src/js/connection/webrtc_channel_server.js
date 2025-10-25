@@ -1,8 +1,7 @@
 import handlersFunc from "../utils/handlers.js";
 import {processCandidates, SetupFreshConnection} from "./common_webrtc.js";
-import connectionFuncSig from "./broadcast.js";
-import actionToHandler from "../utils/action_to_handler.js";
 import {delayReject} from "../utils/timer.js";
+import {broad_chan_to_actions} from "./chan_to_sender.js";
 
 export default function createDataChannel(id, logger) {
     const handlers = handlersFunc(["error", "open", "message", "beforeclose", "close"]);
@@ -71,17 +70,17 @@ export default function createDataChannel(id, logger) {
     function setupConnection() {
 
         const candidateAdder = {
-            add : (cand) => {
+            add: (cand) => {
                 localCandidates.push(cand);
             },
             done: () => {
                 candidateWaiter.resolve(localCandidates);
             },
-            resetCands : resetCands
+            resetCands: resetCands
         };
         peerConnection = SetupFreshConnection(id, logger, candidateAdder);
 
-        dataChannel = peerConnection.createDataChannel("gamechannel"+id);
+        dataChannel = peerConnection.createDataChannel("gamechannel" + id);
 
         logger.log("datachanid " + dataChannel.id, dataChannel.label);
 
@@ -183,35 +182,29 @@ export default function createDataChannel(id, logger) {
         return dataToSend;
     }
 
-    async function setupChan(signalingChan) {
-        const sigConnection = connectionFuncSig(id, logger, signalingChan);
-        const openConPromise = Promise.withResolvers();
+    function setupChan(signalingChan) {
         const actions = {
             "offer_and_cand": async (data) => {
                 logger.log("offerCand", data);
-                answerAndCandPromise.resolve(data);
-                const openCon = await openConPromise.promise;
+                answerAndCandPromise.resolve(data.data);
                 return Promise.race([connectionPromise.promise, delayReject(20000)]).catch(() => {
                     if (clientId != null) {
-                        openCon.sendRawTo("stop_waiting", {}, clientId);
+                        signalingChan.send("stop_waiting", {}, clientId);
                         connectionPromise.reject("timeout7");
                     }
                 });
+            },
+            "join": async (data) => {
+                logger.log("onJoin", data);
+                clientId ??= data.from;
+                if (clientId === data.from) {
+                    const dataToSend = await getOfferAndCands();
+                    signalingChan.send("offer_and_cand", dataToSend, clientId);
+                }
             }
         };
-        const handlers = actionToHandler(actions);
-        sigConnection.on("join", async (data) => {
-            logger.log("onJoin", data);
-            const openCon = await openConPromise.promise;
-            clientId ??= data.from;
-            if (clientId === data.from) {
-                const dataToSend = await getOfferAndCands();
-                openCon.sendRawTo("offer_and_cand", dataToSend, clientId);
-            }
-        });
-        const openCon = await sigConnection.connect();
-        openCon.registerHandler(handlers);
-        openConPromise.resolve(openCon);
+        const unsubscribe = broad_chan_to_actions(signalingChan, actions, logger, false, id);
+        return unsubscribe;
     }
 
     async function processAns() {

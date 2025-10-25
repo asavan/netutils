@@ -30,6 +30,12 @@ export default function handlersFunc(arr, queue) {
         delete obj[key];
     };
 
+    const unsubscribeAll = () => {
+        for (const f of arr) {
+            handlers[f] = {};
+        }
+    }
+
     const reset = (name, callback) => {
         assert(hasAction(name), "No name for reset " + name);
         handlers[name] = {};
@@ -38,7 +44,7 @@ export default function handlersFunc(arr, queue) {
     const set = (f, arr1) => {
         handlers[f] = arr1;
     };
-    const handler = (name) => (arg) => call(name, arg);
+    const getAction = (name) => (arg) => call(name, arg);
     const call = (name, arg) => {
         const obj = getSafe(name);
         const callbacks = Object.values(obj);
@@ -64,9 +70,10 @@ export default function handlersFunc(arr, queue) {
         set,
         call,
         reset,
-        handler,
+        getAction,
         hasAction,
         unsubscribe,
+        unsubscribeAll,
         actionKeys
     };
 }
