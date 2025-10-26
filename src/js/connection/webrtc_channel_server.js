@@ -90,11 +90,11 @@ export default function createDataChannel(id, logger) {
     }
 
     async function updateOffer() {
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        logger.log("create offer", offer);
-        await peerConnection.setLocalDescription(offer);
-        return () => offer;
+        // const offer = await peerConnection.createOffer();
+        // await peerConnection.setLocalDescription(offer);
+        // logger.log("create offer", offer);
+        await peerConnection.setLocalDescription();
+        return () => peerConnection.localDescription;
     }
 
     async function setAnswerAndCand(data) {
@@ -116,7 +116,6 @@ export default function createDataChannel(id, logger) {
         logger.log("cands", cands.length);
         return {
             offer,
-            cands,
             id
         };
     }
