@@ -13,7 +13,7 @@ function showReadBtn(window, document, logger) {
     qrBtn.classList.remove("hidden");
     qrBtn.addEventListener("click", async () => {
         let codes = await scanBarcode(window, document, logger);
-        logger.log(codes);
+        logger.log("codes1", codes);
         if (!codes) {
             const sign = prompt("Get code from qr");
             if (sign == null) {
@@ -46,7 +46,7 @@ function showQr(window, document, settings, dataToSend) {
 }
 
 export async function server_chan(myId, window, document, settings) {
-    const mainLogger = loggerFunc(document, settings);
+    const mainLogger = loggerFunc(document, settings, 2, null, "mainServer");
 
     const signalingLogger = loggerFunc(document, settings, 1);
     const gameChannelPromise = Promise.race([
@@ -58,7 +58,7 @@ export async function server_chan(myId, window, document, settings) {
     const dataToSend = await dataChan.getDataToSend();
     const qr = showQr(window, document, settings, dataToSend);
     showReadBtn(window, document, mainLogger).then((answerAndCand) => {
-        mainLogger.log(answerAndCand);
+        mainLogger.log("decoded", answerAndCand);
         dataChan.resolveExternal(answerAndCand);
     }).catch(err => {
         mainLogger.error(err);
@@ -68,7 +68,9 @@ export async function server_chan(myId, window, document, settings) {
         dataChan.setupChan(sigChan);
     }
     await dataChan.processAns();
+    mainLogger.log("Ans setted");
     await dataChan.ready();
+    mainLogger.log("Chan ready");
 
     removeElem(qr);
     return dataChan;

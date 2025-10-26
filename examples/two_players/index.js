@@ -14,7 +14,7 @@ async function main(window, document) {
     }
     addSettingsButton(document, settings);
     const myId = netObj.getMyId(window, settings, Math.random);
-    const logger = loggerFunc(document, settings);
+    const logger = loggerFunc(document, settings, 2, null, "mainLog");
     console.log("123", myId);
     logger.log(myId);
     const pc = new RTCPeerConnection();
@@ -23,6 +23,9 @@ async function main(window, document) {
     try {
         const clientChan = await client_chan(myId, window, document, settings);
         console.log("Client", clientChan);
+        if (!clientChan) {
+            throw new Error("No chan1");
+        }
     } catch (e) {
         console.log(e);
         const chan = await server_chan(myId, window, document, settings);

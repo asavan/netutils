@@ -109,7 +109,9 @@ export async function client_chan(myId, window, document, settings) {
     } catch (err) {
         mainLogger.error(err);
         const sigChan = await sigChannelPromise;
-        await sigChan.ready();
+        if (sigChan) {
+            await sigChan.ready();
+        }
         commChan = sigChan;
     } finally {
         unsubscribe(unsubscribePromise);
