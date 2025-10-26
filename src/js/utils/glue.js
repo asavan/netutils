@@ -3,7 +3,7 @@ import { assert } from "./assert.js";
 /*callable getAction, hasAction*/
 // onable on, unsubscribe
 
-function glue(keys, onable, callable) {
+export function glue(keys, onable, callable) {
     const unsubArr = [];
     for (const action of keys) {
         if (!callable.hasAction(action)) {

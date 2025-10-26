@@ -18,12 +18,12 @@ export function subscribe_rtc(chan, actions, onable, keys, logger) {
         unsubTikets[key] = ut;
     }
 
-    const unsubsribe = () => {
+    const unsubsribeAll = () => {
         chan.unsubscribe("message", unsubTicket);
         for (const key of keys) {
             onable.unsubscribe(key, unsubTikets[key]);
         }
     };
 
-    return {unsubsribe};
+    return {unsubsribeAll};
 }

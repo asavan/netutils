@@ -94,6 +94,7 @@ export default function createDataChannel(id, logger) {
     }
 
     const close = async () => {
+        connectionPromise.reject("close");
         // iphone fires "onerror" on close socket
         await handlers.call("beforeclose", id);
         if (isConnected) {
@@ -107,6 +108,20 @@ export default function createDataChannel(id, logger) {
     const on = handlers.on;
 
     const ready = () => connectionPromise.promise;
+
+    async function getClientData(offerPromise) {
+        const offerAndCandidates = await offerPromise;
+        serverId = offerAndCandidates.id;
+        logger.log("get offer promise", offerAndCandidates);
+        const answer = await processOffer(offerAndCandidates);
+        const timer = delay(2000);
+        const candidatesPromice = getCandidates();
+        const cands = await Promise.race([candidatesPromice, timer]);
+        const answer1 = answer();
+        const dataToSend = {sdp: answer1.sdp, id};
+        logger.log("send reply", dataToSend, answer1, cands);
+        return dataToSend;
+    }
 
     async function connect(networkPromise, signalingChan) {
         logger.log("client connect");
@@ -144,16 +159,7 @@ export default function createDataChannel(id, logger) {
         }
 
         const offerPromise = Promise.race([networkPromise.promise, delayReject(5000)]);
-        const offerAndCandidates = await offerPromise;
-        serverId = offerAndCandidates.id;
-        logger.log("get offer promise", offerAndCandidates);
-        const answer = await processOffer(offerAndCandidates);
-        const timer = delay(2000);
-        const candidatesPromice = getCandidates();
-        const cands = await Promise.race([candidatesPromice, timer]);
-        const answer1 = answer();
-        const dataToSend = {sdp: answer1.sdp, id};
-        logger.log("send reply", dataToSend, answer1, cands);
+        const dataToSend = await getClientData(offerPromise);
         if (signalingChan) {
             const openCon = await sigConnectionPromise.promise;
             openCon.sendRawTo("offer_and_cand", dataToSend, serverId);
@@ -161,5 +167,6 @@ export default function createDataChannel(id, logger) {
 
         return dataToSend;
     }
-    return {on, send, close, ready, connect};
+    const getOtherId = () => serverId;
+    return {on, send, close, ready, connect, getClientData, getOtherId};
 }

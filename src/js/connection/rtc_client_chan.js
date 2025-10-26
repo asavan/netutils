@@ -5,6 +5,7 @@ import {delayReject} from "../utils/timer.js";
 
 import {makeQrStr, removeElem} from "../views/qr_helper.js";
 import JSONCrush from "jsoncrush";
+import {broad_chan_to_actions} from "./chan_to_sender.js";
 
 function showQr(window, document, settings, dataToSend, logger) {
     const jsonString = JSON.stringify(dataToSend);
@@ -16,7 +17,7 @@ function showQr(window, document, settings, dataToSend, logger) {
     return qr;
 }
 
-function clientOfferPromise(window, offerPromise) {
+export function clientOfferPromise(window, offerPromise) {
     const queryString = window.location.search;
     const urlParams = new window.URLSearchParams(queryString);
     const connectionStr = urlParams.get("z");
@@ -31,6 +32,47 @@ function clientOfferPromise(window, offerPromise) {
     offerPromise.resolve(offerAndCandidates);
 }
 
+async function connectDataAndSig(dataChan, sigChannelPromise, offerPromiseWithResolvers, logger, id) {
+    logger.log("client connect");
+    const signalingChan = await sigChannelPromise;
+    if (!signalingChan) {
+        logger.log("No chan");
+        offerPromiseWithResolvers.reject("No chan");
+        return () => {
+        };
+    }
+    const actions = {
+        "gameinit": () => {
+            offerPromiseWithResolvers.reject("bad server");
+        },
+        "offer_and_cand": (data) => {
+            offerPromiseWithResolvers.resolve(data);
+        },
+        "stop_waiting": () => {
+            dataChan.close();
+        }
+    };
+    const unsubscribe = broad_chan_to_actions(signalingChan, actions, logger, true, id);
+    await signalingChan.ready();
+    signalingChan.send("join", {}, "all");
+    return unsubscribe;
+}
+
+async function sendOffer(dataToSend, serverId, sigChannelPromise) {
+    const signalingChan = await sigChannelPromise;
+    if (signalingChan) {
+        await signalingChan.ready();
+        signalingChan.send("offer_and_cand", dataToSend, serverId);
+    }
+}
+
+async function closeSig(sigChannelPromise) {
+    const signalingChan = await sigChannelPromise;
+    if (signalingChan) {
+        signalingChan.close();
+    }
+}
+
 
 export async function client_chan(myId, window, document, settings) {
     const mainLogger = loggerFunc(document, settings, 2, null, "mainLog");
@@ -42,14 +84,31 @@ export async function client_chan(myId, window, document, settings) {
     }
     mainLogger.log("maybe server " + serverId);
     const signalingLogger = loggerFunc(document, settings, 1);
-    const gameChannelPromise = createSignalingChannel(myId, serverId, window.location, settings, signalingLogger);
-    const sigChan = await Promise.race([gameChannelPromise, delayReject(5000)]).catch(() => null);
+    const sigChannelPromise = Promise.race([
+        createSignalingChannel(myId, serverId, window.location, settings, signalingLogger),
+        delayReject(5000)
+    ]).catch(() => null);
     const dataChanLogger = loggerFunc(document, settings, 3);
     const dataChan = createDataChannelClient(myId, dataChanLogger);
     const qrLogger = loggerFunc(document, settings, 1);
-    const dataToSend = await dataChan.connect(offerPromise, sigChan);
-    const qr = showQr(window, document, settings, dataToSend, qrLogger);
-    await dataChan.ready();
-    removeElem(qr);
-    return dataChan;
+    const unsubscribe = connectDataAndSig(dataChan, sigChannelPromise, offerPromise, dataChanLogger, myId);
+    const oPromise = Promise.race([offerPromise.promise, delayReject(5000)]);
+    let commChan = null;
+    try {
+        const dataToSend = await dataChan.getClientData(oPromise);
+        const qr = showQr(window, document, settings, dataToSend, qrLogger);
+        sendOffer(dataToSend, dataChan.getOtherId(), sigChannelPromise);
+        await dataChan.ready();
+        removeElem(qr);
+        closeSig(sigChannelPromise);
+        commChan = dataChan;
+    } catch (err) {
+        mainLogger.error(err);
+        const sigChan = await sigChannelPromise;
+        await sigChan.ready();
+        commChan = sigChan;
+    } finally {
+        unsubscribe();
+    }
+    return commChan;
 }
