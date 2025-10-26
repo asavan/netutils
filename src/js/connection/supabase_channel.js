@@ -47,12 +47,12 @@ function createSignalingChannelWithNameByClient(name, id, logger, supabase) {
 
     const readyPromise = new Promise((resolve, reject) => {
         ++readyCounter;
-        console.log("readyCounter " + readyCounter);
+        logger.log("readyCounter " + readyCounter);
         myChannel.subscribe(async (status) => {
             if (status !== "SUBSCRIBED") {
                 if (needClose) {
                     needClose = false;
-                    logger.error("SUBSCRIBED " + name, status);
+                    logger.log("NOT SUBSCRIBED " + name, status);
                     handlers.call("error", id);
                     await close();
                     reject(status);
