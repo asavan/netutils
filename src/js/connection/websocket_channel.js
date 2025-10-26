@@ -16,13 +16,14 @@ export default function createSignalingChannel(id, socketUrl, logger) {
     };
 
     const close = async () => {
+        connectionPromise.reject("close");
         // iphone fires "onerror" on close socket
         await handlers.call("beforeclose", id);
         ws.onerror = stub;
         return ws.close();
     };
 
-    const on = (name, f) => handlers.on(name, f);
+    const {on, unsubscribe} = handlers;
 
     const ready = () => connectionPromise.promise;
 
@@ -55,5 +56,5 @@ export default function createSignalingChannel(id, socketUrl, logger) {
         connectionPromise.reject(e);
         return handlers.call("error", id);
     };
-    return {on, send, close, ready};
+    return {on, unsubscribe, send, close, ready};
 }
