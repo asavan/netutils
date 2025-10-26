@@ -48,9 +48,18 @@ export function broad_chan_to_actions(chan, actions, logger, useDataOnly, id) {
     return unsubscribeAll;
 }
 
-export function broad_chan_to_callable(chan, to) {
+export function broad_chan_to_callable(chan, to, logger, filter) {
     const hasAction = () => true;
-    const getAction = (action) => (data) => chan.send(action, data, to);
+    const getAction = (action) => (data) => {
+        if (filter) {
+            const needSend = filter(data);
+            if (!needSend) {
+                logger.log("ignore", data);
+                return;
+            }
+        }
+        chan.send(action, data, to);
+    };
     return {
         hasAction,
         getAction
@@ -66,8 +75,8 @@ export function filterCallable(callable, keys) {
     };
 }
 
-export function subscribe_both_ways(onable, keys, chan, actions, logger, useDataOnly, id, to) {
-    const bcc = broad_chan_to_callable(chan, to);
+export function subscribe_both_ways(onable, keys, chan, actions, logger, useDataOnly, id, to, filter) {
+    const bcc = broad_chan_to_callable(chan, to, logger, filter);
     const unsubSender = glue(keys, onable, bcc);
     const unsubReceiver = broad_chan_to_actions(chan, actions, logger, useDataOnly, id);
     const unsubscribeAll = () => {
