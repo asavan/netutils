@@ -73,6 +73,10 @@ async function closeSig(sigChannelPromise) {
     }
 }
 
+async function unsubscribe(unsubscribePromise) {
+    const unsub = await unsubscribePromise;
+    unsub();
+}
 
 export async function client_chan(myId, window, document, settings) {
     const mainLogger = loggerFunc(document, settings, 2, null, "mainLog");
@@ -91,7 +95,7 @@ export async function client_chan(myId, window, document, settings) {
     const dataChanLogger = loggerFunc(document, settings, 3);
     const dataChan = createDataChannelClient(myId, dataChanLogger);
     const qrLogger = loggerFunc(document, settings, 1);
-    const unsubscribe = connectDataAndSig(dataChan, sigChannelPromise, offerPromise, dataChanLogger, myId);
+    const unsubscribePromise = connectDataAndSig(dataChan, sigChannelPromise, offerPromise, dataChanLogger, myId);
     const oPromise = Promise.race([offerPromise.promise, delayReject(5000)]);
     let commChan = null;
     try {
@@ -108,7 +112,7 @@ export async function client_chan(myId, window, document, settings) {
         await sigChan.ready();
         commChan = sigChan;
     } finally {
-        unsubscribe();
+        unsubscribe(unsubscribePromise);
     }
     return commChan;
 }
