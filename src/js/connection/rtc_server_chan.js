@@ -90,7 +90,7 @@ export async function server_chan(myId, window, document, settings) {
 
     let commChan = null;
     try {
-        const dataToSend = dataToSendPromise;
+        const dataToSend = await dataToSendPromise;
         const qr = showQr(window, document, settings, dataToSend, mainLogger);
         showReadBtn(window, document, mainLogger).then((answerAndCand) => {
             mainLogger.log("decoded", answerAndCand);
