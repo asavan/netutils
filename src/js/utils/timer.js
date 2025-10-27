@@ -4,3 +4,11 @@ export const delayReject = async (ms) => {
     await delay(ms);
     throw new Error("timeout " + ms);
 };
+
+export const waitWithTimerReject = (ms) => {
+    const timer = delayReject(ms);
+    const wait = (promise) => {
+        return Promise.race([promise, timer]);
+    }
+    return {wait};
+};
