@@ -7,7 +7,6 @@ import scanBarcode from "../views/barcode.js";
 import {delayReject} from "../utils/timer.js";
 import {netObj} from "../../../index.js";
 import {broad_chan_to_actions} from "./chan_to_sender.js";
-import {unsubscribe} from "./rtc_common_chan.js";
 
 function showReadBtn(window, document, logger) {
     const barCodeReady = Promise.withResolvers();
@@ -85,8 +84,7 @@ export async function server_chan(myId, window, document, settings) {
     const dataChanLogger = loggerFunc(document, settings, 3);
     const dataChan = createDataChannel(myId, dataChanLogger);
     const dataToSendPromise = dataChan.getDataToSend();
-    const unsubPromise = connectDataAndSigServer(dataChan,
-        sigChannelPromise, dataToSendPromise, signalingLogger, myId);
+    connectDataAndSigServer(dataChan, sigChannelPromise, dataToSendPromise, signalingLogger, myId);
 
     let commChan = null;
     try {
@@ -111,8 +109,6 @@ export async function server_chan(myId, window, document, settings) {
             await sigChan.ready();
         }
         commChan = sigChan;
-    } finally {
-        unsubscribe(unsubPromise);
     }
     return commChan;
 }
