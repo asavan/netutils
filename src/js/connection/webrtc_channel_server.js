@@ -1,7 +1,6 @@
 import handlersFunc from "../utils/handlers.js";
 import {processCandidates, SetupFreshConnection} from "./common_webrtc.js";
 import {delayReject} from "../utils/timer.js";
-import {broad_chan_to_actions} from "./chan_to_sender.js";
 
 export default function createDataChannel(id, logger) {
     const handlers = handlersFunc(["error", "open", "message", "beforeclose", "close"]);
@@ -160,13 +159,15 @@ export default function createDataChannel(id, logger) {
         };
     }
 
-    const close = async () => {
+    const close = async (reason) => {
         // iphone fires "onerror" on close socket
+        reason ??= "close chan";
+        connectionPromise.reject(reason);
         await handlers.call("beforeclose", id);
         if (isConnected) {
             isConnected = false;
             if (dataChannel) {
-                logger.error("Try to close");
+                logger.log("Try to close");
                 dataChannel.close();
             }
         }
@@ -183,31 +184,6 @@ export default function createDataChannel(id, logger) {
         return dataToSend;
     }
 
-    function setupChan(signalingChan) {
-        const actions = {
-            "offer_and_cand": (data) => {
-                logger.log("offerCand", data);
-                answerAndCandPromise.resolve(data.data);
-                return Promise.race([connectionPromise.promise, delayReject(20000)]).catch(() => {
-                    if (clientId != null) {
-                        signalingChan.send("stop_waiting", {}, clientId);
-                    }
-                    connectionPromise.reject("timeout7");
-                });
-            },
-            "join": async (data) => {
-                logger.log("onJoin", data);
-                clientId ??= data.from;
-                if (clientId === data.from) {
-                    const dataToSend = await getOfferAndCands();
-                    signalingChan.send("offer_and_cand", dataToSend, clientId);
-                }
-            }
-        };
-        const unsubscribe = broad_chan_to_actions(signalingChan, actions, logger, false, id);
-        return unsubscribe;
-    }
-
     async function processAns() {
         logger.log("before before set");
         const answerAndCand = await answerAndCandPromise.promise;
@@ -218,5 +194,5 @@ export default function createDataChannel(id, logger) {
 
     const getOtherId = () => clientId;
 
-    return {on, send, close, ready, setupChan, getDataToSend, getOtherId, resolveExternal, processAns};
+    return {on, send, close, ready, getDataToSend, getOtherId, resolveExternal, processAns};
 }

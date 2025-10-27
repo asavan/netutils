@@ -6,6 +6,7 @@ import {delayReject} from "../utils/timer.js";
 import {makeQrStr, removeElem} from "../views/qr_helper.js";
 import JSONCrush from "jsoncrush";
 import {broad_chan_to_actions} from "./chan_to_sender.js";
+import {unsubscribe} from "./rtc_common_chan.js";
 
 function showQr(window, document, settings, dataToSend, logger) {
     const jsonString = JSON.stringify(dataToSend);
@@ -71,11 +72,6 @@ async function closeSig(sigChannelPromise) {
     if (signalingChan) {
         signalingChan.close();
     }
-}
-
-async function unsubscribe(unsubscribePromise) {
-    const unsub = await unsubscribePromise;
-    unsub();
 }
 
 export async function client_chan(myId, window, document, settings) {
