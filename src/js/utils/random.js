@@ -21,6 +21,12 @@ function randomEl(arr, rngFunc = Math.random) {
     return arr[randomIndex(arr.length, rngFunc)];
 }
 
+function swap(arr, i, j) {
+    const tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
 function selectKRandom(arr, k, rngFunc) {
     if (k > arr.length) {
         return arr;
@@ -36,9 +42,19 @@ function selectKRandom(arr, k, rngFunc) {
     return arr.slice(len);
 }
 
+function shuffleArray(array, rngFunc) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(rngFunc() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
 export default {
     makeId,
     randomEl,
     randomInteger,
+    shuffleArray,
     selectKRandom
 };
