@@ -21,7 +21,24 @@ function randomEl(arr, rngFunc = Math.random) {
     return arr[randomIndex(arr.length, rngFunc)];
 }
 
+function selectKRandom(arr, k, rngFunc) {
+    if (k > arr.length) {
+        return arr;
+    }
+    let len = arr.length;
+    let count = 0;
+    while (count < k) {
+        const randInd = randomInteger(0, len, rngFunc);
+        swap(arr, randInd, len-1);
+        --len;
+        ++count;
+    }
+    return arr.slice(len);
+}
+
 export default {
     makeId,
-    randomEl
+    randomEl,
+    randomInteger,
+    selectKRandom
 };
