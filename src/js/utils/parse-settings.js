@@ -35,7 +35,7 @@ export async function parseZipSettings(queryString, settings) {
             settings[key] = value;
         }
         changed.push(key);
-    }
+    };
     for (const [key, value] of urlParams) {
         if (key === "z") {
             const unzipModule = await import("jsoncrush");
