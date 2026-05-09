@@ -86,7 +86,7 @@ export async function server_chan(myId, window, document, settings) {
     const dataToSendPromise = dataChan.getDataToSend();
     connectDataAndSigServer(dataChan, sigChannelPromise, dataToSendPromise, signalingLogger, myId);
 
-    let commChan = null;
+    let commChan;
     try {
         const dataToSend = await dataToSendPromise;
         const qr = showQr(window, document, settings, dataToSend, mainLogger);

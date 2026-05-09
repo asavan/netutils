@@ -8,6 +8,7 @@ export {server_chan} from "./src/js/connection/rtc_server_chan.js";
 export {subscribe_both_ways} from "./src/js/connection/chan_to_sender.js";
 export {delay, delayReject} from "./src/js/utils/timer.js";
 export {default as random} from "./src/js/utils/random.js";
+export {translator} from "./src/js/utils/translation.js";
 export {default as netObj} from "./src/js/utils/net.js";
 export {default as handlersFunc} from "./src/js/utils/handlers.js";
 export {default as install} from "./src/js/utils/install_as_app.js";

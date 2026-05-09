@@ -97,7 +97,7 @@ export async function client_chan(myId, window, document, settings) {
     const qrLogger = loggerFunc(document, settings, 1);
     const unsubscribePromise = connectDataAndSig(dataChan, sigChannelPromise, offerPromise, dataChanLogger, myId);
     const oPromise = Promise.race([offerPromise.promise, delayReject(5000)]);
-    let commChan = null;
+    let commChan;
     try {
         const dataToSend = await dataChan.getClientData(oPromise);
         const qr = showQr(window, document, settings, dataToSend, qrLogger);

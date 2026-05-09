@@ -53,11 +53,3 @@ export function vibrateIfNeeded(window, inactivePeriod, lastInteractTime) {
         }
     }
 }
-
-export function pluralize(count, noun, suffix = "s") {
-    let ending = "";
-    if (count !== 1) {
-        ending = suffix;
-    }
-    return `${count} ${noun}` + ending;
-}
