@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import translator from "../src/js/utils/translation.js";
+import {translator} from "../src/js/utils/translation.js";
 
 function localeLoader() {
     return {
