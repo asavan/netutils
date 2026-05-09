@@ -7,6 +7,11 @@ function numAndDeclOfNum(number, titles) {
     return number + " " + declOfNum(number, titles);
 }
 
+export function detectLangByBrowser(window) {
+    const locale = new Intl.Locale(window.navigator.language);
+    return locale.language;
+}
+
 export function pluralize(count, noun, suffix = "s") {
     let ending = "";
     if (count !== 1) {
@@ -35,10 +40,6 @@ export function translator(externalLang, langLoader) {
         currentLang = supportedLangs[0];
     }
 
-    const detectByBrowser = (window) => {
-        const locale = new Intl.Locale(window.navigator.language);
-        return locale.language;
-    };
 
     const getLang = () => currentLang;
 
@@ -83,7 +84,6 @@ export function translator(externalLang, langLoader) {
 
     return {
         t,
-        detectByBrowser,
         warmUp,
         setLang,
         pluralise: pluraliseInner,
