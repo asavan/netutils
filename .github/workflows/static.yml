@@ -1,7 +1,7 @@
-name: test
+# Simple workflow for deploying static content to GitHub Pages
+name: GH Test
 
 on:
-  workflow_call:
   # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
@@ -9,21 +9,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v5
-      - name: Use Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - run: npm i
-      - run: npm run style
-      - run: npm run style2
-      - run: npm run test
+  deploy:
+    uses: asavan/dev-deps/.github/workflows/test.yml@master
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
