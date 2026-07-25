@@ -18,6 +18,6 @@ export {makeQrStr, makeQrElement, removeElem} from "./src/js/views/qr_helper.js"
 export {default as scanBarcode} from "./src/js/views/barcode.js";
 export {default as PromiseQueue} from "./src/js/utils/async-queue.js";
 export {default as actionToHandler} from "./src/js/utils/action_to_handler.js";
-export {parseSettings} from "./src/js/utils/parse-settings.js";
+export {parseSettings, parseZipSettings} from "./src/js/utils/parse-settings.js";
 export {assert} from "./src/js/utils/assert.js";
 export {default as lobby} from "./src/js/lobby.js";

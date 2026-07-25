@@ -8,12 +8,12 @@ function makeId(length, rngFunc) {
     return result;
 }
 
-function randomInteger(min, max, rngFunc) {
+function randomInteger(min, max, rngFunc = Math.random) {
     const rand = min + rngFunc() * (max - min);
     return Math.floor(rand);
 }
 
-function randomIndex(len, rngFunc) {
+function randomIndex(len, rngFunc = Math.random) {
     return randomInteger(0, len, rngFunc);
 }
 
@@ -54,6 +54,7 @@ function shuffleArray(array, rngFunc) {
 export default {
     makeId,
     randomEl,
+    randomIndex,
     randomInteger,
     shuffleArray,
     selectKRandom
