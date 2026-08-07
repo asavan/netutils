@@ -1,6 +1,6 @@
 {
   "name": "netutils",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": "Alex Sav",
   "description": "Net utils",
   "main": "index.js",
