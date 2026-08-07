@@ -30,7 +30,11 @@ function getWebSocketUrl(settings, location) {
     if (location.protocol === "https:") {
         return;
     }
-    return "ws://" + location.hostname + ":" + settings.wsPort;
+    const urlWithoutPath = "ws://" + location.hostname + ":" + settings.wsPort;
+    if (!settings.wsPath) {
+        return urlWithoutPath;
+    }
+    return urlWithoutPath + settings.wsPath;
 }
 
 function getHostUrl(settings, location) {
