@@ -21,3 +21,4 @@ export {default as actionToHandler} from "./src/js/utils/action_to_handler.js";
 export {parseSettings, parseZipSettings} from "./src/js/utils/parse-settings.js";
 export {assert} from "./src/js/utils/assert.js";
 export {default as lobby} from "./src/js/lobby.js";
+export {negotiator, wrapNetworkToNegotiator, wrapActionsToNegotiator} from "./src/js/connection/negotiator.js";
