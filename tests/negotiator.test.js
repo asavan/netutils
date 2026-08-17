@@ -58,12 +58,12 @@ test("simple network", () => {
     const n2 = network(n1.getHandler());
     n1.setExternalHandler(n2.getHandler());
     n1.on("message", msg => {
-        ++numOfCalls;
         assert.equal(msg, "first message");
+        ++numOfCalls;
     });
     n2.on("message", msg => {
-        ++numOfCalls;
         assert.equal(msg, "second message");
+        ++numOfCalls;
     });
     n2.send("first message");
     n1.send("second message");
@@ -112,8 +112,8 @@ test("send move", () => {
     roundNeg.registerHandler(moveNeg);
 
     n2.on("message", msg => {
+        assert.equal(msg, JSON.stringify(payload3));
         wasCalled = true;
-        assert.equal(msg, payload3);
     });
 
     const move1 = {

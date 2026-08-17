@@ -27,12 +27,19 @@ export function negotiator({name, callback}) {
     const setId = (id1) => id = id1;
 
     const send = (data) => {
-        const toSend = {};
-        toSend[name] = data;
-        if (parentSender) {
-            parentSender(data);
+        if (!parentSender) {
+            // wrap?
+            return data;
         }
-        return toSend;
+        if (name) {
+            const toSend = {};
+            toSend[name] = data;
+            parentSender(toSend);
+            return toSend;
+        } else {
+            parentSender(data);
+            return data;
+        }
     };
 
     const addUnsub = (data) => {
