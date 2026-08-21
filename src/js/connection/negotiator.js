@@ -32,12 +32,20 @@ export function negotiator({name, callback}) {
         if (name) {
             const toSend = {};
             toSend[name] = data;
-            parentSender(toSend);
+            parentSender(modifyData(toSend));
             return toSend;
         } else {
-            parentSender(data);
+            parentSender(modifyData(data));
             return data;
         }
+    };
+
+    const idFunc = (data) => data;
+
+    let modifyData = idFunc;
+
+    const setModifyData = (f) => {
+        modifyData = f;
     };
 
     const addUnsub = (data) => {
@@ -73,6 +81,8 @@ export function negotiator({name, callback}) {
         clearUnsub,
         setId,
         send,
+        modifyData,
+        setModifyData,
         parseData,
         getName,
         registerHandler,
