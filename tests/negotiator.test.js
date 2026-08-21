@@ -112,7 +112,7 @@ test("send move", () => {
     roundNeg.registerHandler(moveNeg);
 
     n2.on("message", msg => {
-        assert.equal(msg, JSON.stringify(payload3));
+        assert.equal(JSON.stringify(msg), JSON.stringify(payload3));
         wasCalled = true;
     });
 

@@ -32,10 +32,10 @@ export function negotiator({name, callback}) {
         if (name) {
             const toSend = {};
             toSend[name] = data;
-            parentSender(modifyData(toSend));
+            parentSender.send(modifyData(toSend));
             return toSend;
         } else {
-            parentSender(modifyData(data));
+            parentSender.send(modifyData(data));
             return data;
         }
     };
@@ -71,10 +71,11 @@ export function negotiator({name, callback}) {
             old.clearUnsub();
         }
         handlers[neg1.getName()] = neg1;
-        neg1.setParentSender(send);
+        neg1.setParentSender({send});
     };
 
     const setParentSender = (ps) => parentSender = ps;
+    const getParentSender = () => parentSender;
 
     return {
         addUnsub,
@@ -86,7 +87,8 @@ export function negotiator({name, callback}) {
         parseData,
         getName,
         registerHandler,
-        setParentSender
+        setParentSender,
+        getParentSender
     };
 }
 
@@ -100,11 +102,7 @@ export function wrapNetworkToNegotiator(net1) {
             neg1.parseData(msg);
         }
     });
-    const sender = (data) => {
-        const str = JSON.stringify(data);
-        net1.send(str);
-    };
-    neg1.setParentSender(sender);
+    neg1.setParentSender(net1);
     return neg1;
 }
 
