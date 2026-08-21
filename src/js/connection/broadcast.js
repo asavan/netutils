@@ -1,5 +1,8 @@
 import handlersFunc from "../utils/handlers.js";
 
+/**
+ * @deprecated Since version 0.1.9.
+ */
 export default function connectionFunc(id, logger, signaling) {
     if (!signaling) {
         throw new Error("No signaling");

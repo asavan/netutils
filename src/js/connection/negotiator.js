@@ -2,24 +2,22 @@ export function negotiator({name, callback}) {
     const handlers = {};
     let parentSender = null;
     const unsubArr = [];
-    let id = 0;
-    const parseData = (payload) => {
-        if (payload.id !== id) {
-            console.error("Wrong id in data");
+    let id = null;
+    const parseData = (payload, context) => {
+        if (context === undefined || context === null) {
+            context = payload;
+        }
+        if (payload.id != id) {
+            console.log("Wrong id in data");
         }
         for (const key in payload) {
             if (key in handlers) {
                 const runner = handlers[key];
-                if ("parseData" in runner) {
-                    runner.parseData(payload[key]);
-                } else {
-                    console.log("DANGER: " + key);
-                    runner(payload[key]);
-                }
+                runner.parseData(payload[key], context);
             }
         }
         if (callback && typeof callback === "function") {
-            callback(payload);
+            callback(payload, context);
         }
     };
 
@@ -59,17 +57,13 @@ export function negotiator({name, callback}) {
     };
 
     const registerHandler = (neg1) => {
-        if ("getName" in neg1) {
-            const old = handlers[neg1.getName()];
-            if (old) {
-                old.setParentSender(null);
-                old.clearUnsub();
-            }
-            handlers[neg1.getName()] = neg1;
-            neg1.setParentSender(send);
-        } else {
-            console.error("Unknown handler name ");
+        const old = handlers[neg1.getName()];
+        if (old) {
+            old.setParentSender(null);
+            old.clearUnsub();
         }
+        handlers[neg1.getName()] = neg1;
+        neg1.setParentSender(send);
     };
 
     const setParentSender = (ps) => parentSender = ps;
