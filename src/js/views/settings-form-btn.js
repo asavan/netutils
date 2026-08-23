@@ -1,6 +1,9 @@
 import createFormBinder from "./formbinder_v2.js";
 import fullScreen from "./fullscreen.js";
 
+/**
+ * @deprecated Since version 0.1.9.
+ */
 export default function addSettingsButton(document, settings) {
     const maxBtn = document.querySelector("#maximize-btn");
     const resizeBtn = document.querySelector("#resize-btn");

@@ -1,4 +1,4 @@
-function toggleFullScreen(document, elem) {
+export function toggleFullScreen(document, elem) {
     if (!document.fullscreenElement) {
         // If the document is not in full screen mode
         // make the video full screen

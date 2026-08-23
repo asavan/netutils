@@ -2,33 +2,13 @@ import loggerFunc from "../views/logger.js";
 import createSignalingChannel from "./channel_with_name.js";
 import createDataChannel from "./webrtc_channel_server.js";
 import {makeQrStr, removeElem} from "../views/qr_helper.js";
-import JSONCrush from "jsoncrush";
-import scanBarcode from "../views/barcode.js";
 import {delayReject} from "../utils/timer.js";
 import {netObj} from "../../../index.js";
 import {broad_chan_to_actions} from "./chan_to_sender.js";
+import {showReadBtn} from "../views/barcode_btn.js";
 
-function showReadBtn(window, document, logger) {
-    const barCodeReady = Promise.withResolvers();
-    const qrBtn = document.querySelector(".qr-btn");
-    qrBtn.classList.remove("hidden");
-    qrBtn.addEventListener("click", async () => {
-        let codes = await scanBarcode(window, document, logger);
-        logger.log("codes1", codes);
-        if (!codes) {
-            const sign = prompt("Get code from qr");
-            if (sign == null) {
-                barCodeReady.reject();
-                return;
-            }
-            codes = sign;
-        }
-        const decode = JSONCrush.uncrush(codes);
-        barCodeReady.resolve(JSON.parse(decode));
-    });
+import JSONCrush from "jsoncrush";
 
-    return barCodeReady.promise;
-}
 
 function showQr(window, document, settings, dataToSend, logger) {
     const urlWithoutParams = netObj.getHostUrl(settings, window.location);
