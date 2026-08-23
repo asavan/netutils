@@ -7,16 +7,16 @@ export function showReadBtn(window, document, logger) {
     const btn = addButton(window, document, "▣", "QR", async () => {
         let codes = await scanBarcode(window, document, logger);
         logger.log("codes1", codes);
-        btn.remove();
         if (!codes) {
             const sign = prompt("Get code from qr");
             if (sign == null) {
-                barCodeReady.reject();
+                // barCodeReady.reject();
                 return;
             }
             codes = sign;
         }
         const decode = JSONCrush.uncrush(codes);
+        btn.remove();
         barCodeReady.resolve(JSON.parse(decode));
     });
     return barCodeReady.promise;
