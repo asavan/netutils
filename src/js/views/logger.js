@@ -15,8 +15,8 @@ export default function loggerFunc(document, settings, level, el, markerName) {
             } else if (typeof message == "object" && JSON && JSON.stringify ) {
                 message = JSON.stringify(message);
             }
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
+            const logEntry = document.createElement("div");
+            logEntry.className = "log-entry";
             logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
 
             // Append and auto-scroll to the bottom
