@@ -10,12 +10,17 @@ export default function loggerFunc(document, settings, level, el, markerName) {
             el = document.querySelector(settings.logger);
         }
         if (el) {
-            if (Error.isError(message)) {
+            if (Error && Error.isError && Error.isError(message)) {
                 message = message.toString();
             } else if (typeof message == "object" && JSON && JSON.stringify ) {
                 message = JSON.stringify(message);
             }
-            el.innerHTML += message + "<br />";
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+
+            // Append and auto-scroll to the bottom
+            el.appendChild(logEntry);
         }
     };
 
