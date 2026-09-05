@@ -68,7 +68,18 @@ export function makeQrElement(urlStr, el, image) {
     return el;
 }
 
+/**
+ * @deprecated Since version 0.1.9.
+ */
 export function makeQrStr(str, window, document, settings, image) {
+    const el = document.querySelector(".qrcontainer");
+    const divToRender = document.createElement("div");
+    divToRender.classList.add("qrcode");
+    el.append(divToRender);
+    return makeQrElement(str, divToRender, image);
+}
+
+export function makeQrStrV2(str, document, image) {
     const el = document.querySelector(".qrcontainer");
     const divToRender = document.createElement("div");
     divToRender.classList.add("qrcode");
