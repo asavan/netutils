@@ -112,7 +112,7 @@ export function createDataChannelV2(logger, initiator) {
         logger.log("createOffer after delay " + dataChannel.id);
         await peerConnection.setLocalDescription();
         logger.log("createOffer after setLocalDescription " + dataChannel.id);
-        await waitForIceGathering(peerConnection.localDescription);
+        await waitForIceGathering(peerConnection);
         return peerConnection.localDescription;
     };
 
@@ -138,7 +138,7 @@ export function createDataChannelV2(logger, initiator) {
         logger.log("After set offer");
         await peerConnection.setLocalDescription();
         logger.log("AFTER create local answer ");
-        await waitForIceGathering(peerConnection.localDescription);
+        await waitForIceGathering(peerConnection);
         return peerConnection.localDescription;
     }
 
