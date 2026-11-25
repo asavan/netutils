@@ -19,6 +19,24 @@ function SetupFreshConnection(logger) {
     return pc;
 }
 
+function waitForIceGathering(pc) {
+    return new Promise((resolve, reject) => {
+        if (pc.iceGatheringState === 'complete') {
+            resolve();
+        } else {
+            const checkState = () => {
+                if (pc.iceGatheringState === 'complete') {
+                    pc.removeEventListener('icegatheringstatechange', checkState);
+                    resolve();
+                }
+            };
+            pc.addEventListener('icegatheringstatechange', checkState);
+            // Страховочный таймаут (на случай, если один из интерфейсов завис)
+            setTimeout(reject, 1500);
+        }
+    });
+}
+
 export function createDataChannelV2(logger, initiator) {
     const handlers = handlersFunc(["error", "open", "message", "beforeclose", "close", "remote"]);
     let peerConnection = null;
@@ -94,6 +112,8 @@ export function createDataChannelV2(logger, initiator) {
         logger.log("createOffer after delay " + dataChannel.id);
         await peerConnection.setLocalDescription();
         logger.log("createOffer after setLocalDescription " + dataChannel.id);
+        await waitForIceGathering(peerConnection.localDescription);
+        return peerConnection.localDescription;
     };
 
     const send = (data) => {
@@ -118,6 +138,8 @@ export function createDataChannelV2(logger, initiator) {
         logger.log("After set offer");
         await peerConnection.setLocalDescription();
         logger.log("AFTER create local answer ");
+        await waitForIceGathering(peerConnection.localDescription);
+        return peerConnection.localDescription;
     }
 
     async function processAnswer(answer) {

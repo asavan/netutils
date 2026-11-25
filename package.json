@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/asavan/netutils",
   "devDependencies": {
-    "devdeps": "github:asavan/dev-deps#v0.2.0"
+    "devdeps": "github:asavan/dev-deps#v0.3.3"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
-    "@supabase/supabase-js": "^2.115.0",
+    "@supabase/supabase-js": "^2.119.2",
     "jsoncrush": "^1.1.8",
     "lz-string": "^1.5.0"
   }
