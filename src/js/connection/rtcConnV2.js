@@ -21,16 +21,16 @@ function SetupFreshConnection(logger) {
 
 function waitForIceGathering(pc) {
     return new Promise((resolve, reject) => {
-        if (pc.iceGatheringState === 'complete') {
+        if (pc.iceGatheringState === "complete") {
             resolve();
         } else {
             const checkState = () => {
-                if (pc.iceGatheringState === 'complete') {
-                    pc.removeEventListener('icegatheringstatechange', checkState);
+                if (pc.iceGatheringState === "complete") {
+                    pc.removeEventListener("icegatheringstatechange", checkState);
                     resolve();
                 }
             };
-            pc.addEventListener('icegatheringstatechange', checkState);
+            pc.addEventListener("icegatheringstatechange", checkState);
             // Страховочный таймаут (на случай, если один из интерфейсов завис)
             setTimeout(reject, 1500);
         }
